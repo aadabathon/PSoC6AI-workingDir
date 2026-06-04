@@ -1,0 +1,6 @@
+build/
+**/build/
+**/.ninja_log
+**/.cache/
+libs/*.mtb
+.mtbqueryapi
