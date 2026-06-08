@@ -211,5 +211,5 @@ include $(CY_TOOLS_DIR)/make/start.mk
 
 # Explicit FreeRTOS include paths (fallback if auto-discovery fails)
 INCLUDES+=../mtb_shared/freertos/release-v10.6.202/Source/include
-INCLUDES+=../mtb_shared/freertos/release-v10.6.202/Source/portable/GCC/ARM_CM4F
+INCLUDES+=../mtb_shared/freertos/release-v10.6.203/Source/portable/GCC/ARM_CM4F
 INCLUDES+=source

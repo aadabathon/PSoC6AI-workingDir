@@ -15,7 +15,8 @@
 #include "dps368.h"
 #include "i2c_bus.h"
 #include "bmm350_glue.h"
-#include "spi_bus.h"
-#include "bgt60.h"
+#include "pdm_mic.h"
+#include "qspi_flash.h"
+
 
  #endif

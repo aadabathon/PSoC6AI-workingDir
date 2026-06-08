@@ -1,0 +1,354 @@
+Loading the ModusToolbox Technology Packs and Early Access Packs
+Finished loading the ModusToolbox Technology Packs and Early Access Packs (3 ms)
+Loading the tools information
+Finished loading the tools information (39 ms)
+Loading the application in directory 'C:/Users/adams/Learning/PSoC6-ai-board/workingDir'
+using cached data from file 'C:/Users/adams/Learning/PSoC6-ai-board/workingDir/.mtbqueryapi'
+creating application information from 'get_app_info' data
+finished creating application information from 'get_app_info' data (56 ms)
+Finished loading the application data (200 ms total, 0 make)
+Loading asset repository references
+Finished loading the asset repository references (1216 ms)
+Loading the manifest data
+Online Content mode has been enabled by default.
+Loading super manfiest files from all sources
+Getting manifests from remote and/or local sources
+Processing system manifest 'https://modustoolbox.infineon.com/manifests/mtb-super-manifest/v2.X/mtb-super-manifest-fv2.xml'
+Downloading super manifest file 'https://modustoolbox.infineon.com/manifests/mtb-super-manifest/v2.X/mtb-super-manifest-fv2.xml'
+Finished loading super manifest files from all sources
+Finished download of file 'https://modustoolbox.infineon.com/manifests/mtb-super-manifest/v2.X/mtb-super-manifest-fv2.xml'
+Starting to parse super manifest with URL 'https://modustoolbox.infineon.com/manifests/mtb-super-manifest/v2.X/mtb-super-manifest-fv2.xml'
+Finished parsing super manifest with URL 'https://modustoolbox.infineon.com/manifests/mtb-super-manifest/v2.X/mtb-super-manifest-fv2.xml'
+Downloading manifest file 'https://github.com/Infineon/mtb-sdk-list-manifest/raw/main/mtb-sdk-list-manifest.xml'
+Downloading manifest file 'https://github.com/Infineon/mtb-ce-manifest/raw/v2.X/mtb-ce-manifest.xml'
+Downloading manifest file 'https://github.com/Infineon/mtb-ce-manifest/raw/v2.X/mtb-ce-manifest-fv2.xml'
+Downloading manifest file 'https://github.com/Infineon/mtb-t2g-ce-manifest/raw/main/mtb-ce-manifest-fv2.xml'
+Downloading manifest file 'https://github.com/Infineon/mtb-bt-app-manifest/raw/v2.X/mtb-bt-app-manifest.xml'
+Downloading manifest file 'https://github.com/Infineon/mtb-bt-app-manifest/raw/v2.X/mtb-bt-app-manifest-fv2.xml'
+Downloading manifest file 'https://github.com/Infineon/cce-app-manifest/raw/v2.X/cce-app-manifest-fv2.xml'
+Downloading manifest file 'https://github.com/Altia-Marketing/altia-ce-manifest/raw/main/altia-ce-manifest-fv2.xml'
+Downloading manifest file 'https://github.com/avnet-iotconnect/avnet-iotc-mtb-ce-manifest/raw/main/avnet-iotc-mtb-ce-manifest-fv2.xml'
+Downloading manifest file 'https://github.com/CyberonEBU/cyberon-mtb-ce-manifest/raw/main/cyberon-mtb-ce-manifest-fv2.xml'
+Downloading manifest file 'https://github.com/golioth/mtb-golioth-ce-manifest/raw/main/mtb-golioth-ce-manifest-fv2.xml'
+Downloading manifest file 'https://github.com/rtlabs-com/mtb-rtlabs-manifest/raw/main/mtb-ce-manifest-fv2-rtlabs.xml'
+Downloading manifest file 'https://github.com/RutronikSystemSolutions/rutronik-ce-manifest/raw/main/rutronik-ce-manifest-fv2.xml'
+Downloading manifest file 'https://github.com/Infineon/mtb-bsp-manifest/raw/v2.X/mtb-bsp-manifest.xml'
+Downloading manifest file 'https://github.com/Infineon/mtb-bsp-manifest/raw/v2.X/mtb-bsp-capabilities-manifest.json'
+Downloading manifest file 'https://github.com/Infineon/mtb-bsp-manifest/raw/v2.X/mtb-bsp-manifest-fv2.xml'
+Downloading manifest file 'https://github.com/Infineon/mtb-bsp-manifest/raw/v2.X/mtb-bsp-dependencies-manifest.xml'
+Downloading manifest file 'https://github.com/Infineon/mtb-bt-bsp-manifest/raw/v2.X/mtb-bt-bsp-manifest.xml'
+Downloading manifest file 'https://github.com/Infineon/mtb-bt-bsp-manifest/raw/v2.X/mtb-bt-bsp-manifest-fv2.xml'
+Downloading manifest file 'https://github.com/Infineon/mtb-bt-bsp-manifest/raw/v2.X/mtb-bt-bsp-dependencies-manifest.xml'
+Downloading manifest file 'https://github.com/Inventek/inventek-bsp-manifest/raw/main/inventek-bsp-manifest-fv2.xml'
+Downloading manifest file 'https://github.com/Inventek/inventek-bsp-manifest/raw/main/inventek-bsp-dependencies-manifest.xml'
+Downloading manifest file 'https://github.com/RutronikSystemSolutions/rutronik-bsp-manifest/raw/main/rutronik-bsp-manifest-fv2.xml'
+Downloading manifest file 'https://github.com/RutronikSystemSolutions/rutronik-bsp-manifest/raw/main/rutronik-bsp-dependencies-manifest.xml'
+Downloading manifest file 'https://github.com/Infineon/mtb-mw-manifest/raw/v2.X/mtb-mw-manifest.xml'
+Downloading manifest file 'https://github.com/Infineon/mtb-mw-manifest/raw/v2.X/mtb-mw-manifest-fv2.xml'
+Downloading manifest file 'https://github.com/Infineon/mtb-mw-manifest/raw/v2.X/mtb-mw-dependencies-manifest.xml'
+Downloading manifest file 'https://github.com/Infineon/mtb-t2g-mw-manifest/raw/main/mtb-t2g-mw-manifest-fv2.xml'
+Downloading manifest file 'https://github.com/Infineon/mtb-t2g-mw-manifest/raw/main/mtb-t2g-mw-dependencies-manifest.xml'
+Downloading manifest file 'https://github.com/Infineon/mtb-bt-mw-manifest/raw/v2.X/mtb-bt-mw-manifest.xml'
+Downloading manifest file 'https://github.com/Infineon/mtb-bt-mw-manifest/raw/v2.X/mtb-bt-mw-manifest-fv2.xml'
+Downloading manifest file 'https://github.com/Infineon/mtb-bt-mw-manifest/raw/v2.X/mtb-bt-mw-dependencies-manifest.xml'
+Downloading manifest file 'https://github.com/Infineon/mtb-wifi-mw-manifest/raw/v2.X/mtb-wifi-mw-manifest.xml'
+Downloading manifest file 'https://github.com/Infineon/mtb-wifi-mw-manifest/raw/v2.X/mtb-wifi-mw-manifest-fv2.xml'
+Downloading manifest file 'https://github.com/Infineon/mtb-wifi-mw-manifest/raw/v2.X/mtb-wifi-mw-dependencies-manifest.xml'
+Downloading manifest file 'https://github.com/avnet-iotconnect/avnet-iotc-mtb-mw-manifest/raw/main/avnet-iotc-mtb-mw-manifest-fv2.xml'
+Downloading manifest file 'https://github.com/CyberonEBU/cyberon-mtb-mw-manifest/raw/main/cyberon-mtb-mw-manifest-fv2.xml'
+Downloading manifest file 'https://github.com/golioth/mtb-golioth-mw-manifest/raw/main/mtb-golioth-mw-manifest-fv2.xml'
+Downloading manifest file 'https://github.com/rtlabs-com/mtb-rtlabs-manifest/raw/main/rtlabs-mtb-mw-manifest-fw2-rtlabs.xml'
+Finished download of file 'https://github.com/Infineon/mtb-sdk-list-manifest/raw/main/mtb-sdk-list-manifest.xml'
+Starting to parse SDK list manifest with URL 'https://github.com/Infineon/mtb-sdk-list-manifest/raw/main/mtb-sdk-list-manifest.xml'
+Finished parsing SDK list manifest with URL 'https://github.com/Infineon/mtb-sdk-list-manifest/raw/main/mtb-sdk-list-manifest.xml'
+Downloading manifest file 'https://github.com/Infineon/mtb-sdk-20829-json/raw/main/mtb-sdk-manifest-20829b1.json'
+Finished download of file 'https://github.com/Infineon/mtb-ce-manifest/raw/v2.X/mtb-ce-manifest.xml'
+Finished download of file 'https://github.com/Infineon/mtb-ce-manifest/raw/v2.X/mtb-ce-manifest-fv2.xml'
+Finished download of file 'https://github.com/Infineon/mtb-t2g-ce-manifest/raw/main/mtb-ce-manifest-fv2.xml'
+Finished download of file 'https://github.com/Infineon/mtb-bt-app-manifest/raw/v2.X/mtb-bt-app-manifest.xml'
+Finished download of file 'https://github.com/Infineon/mtb-bt-app-manifest/raw/v2.X/mtb-bt-app-manifest-fv2.xml'
+Finished download of file 'https://github.com/Infineon/cce-app-manifest/raw/v2.X/cce-app-manifest-fv2.xml'
+Finished download of file 'https://github.com/Altia-Marketing/altia-ce-manifest/raw/main/altia-ce-manifest-fv2.xml'
+Finished download of file 'https://github.com/avnet-iotconnect/avnet-iotc-mtb-ce-manifest/raw/main/avnet-iotc-mtb-ce-manifest-fv2.xml'
+Finished download of file 'https://github.com/CyberonEBU/cyberon-mtb-ce-manifest/raw/main/cyberon-mtb-ce-manifest-fv2.xml'
+Finished download of file 'https://github.com/golioth/mtb-golioth-ce-manifest/raw/main/mtb-golioth-ce-manifest-fv2.xml'
+Finished download of file 'https://github.com/rtlabs-com/mtb-rtlabs-manifest/raw/main/mtb-ce-manifest-fv2-rtlabs.xml'
+Finished download of file 'https://github.com/RutronikSystemSolutions/rutronik-ce-manifest/raw/main/rutronik-ce-manifest-fv2.xml'
+Finished download of file 'https://github.com/Infineon/mtb-bsp-manifest/raw/v2.X/mtb-bsp-manifest.xml'
+Finished download of file 'https://github.com/Infineon/mtb-bsp-manifest/raw/v2.X/mtb-bsp-capabilities-manifest.json'
+Finished download of file 'https://github.com/Infineon/mtb-bsp-manifest/raw/v2.X/mtb-bsp-manifest-fv2.xml'
+Finished download of file 'https://github.com/Infineon/mtb-bsp-manifest/raw/v2.X/mtb-bsp-dependencies-manifest.xml'
+Finished download of file 'https://github.com/Infineon/mtb-bt-bsp-manifest/raw/v2.X/mtb-bt-bsp-manifest.xml'
+Finished download of file 'https://github.com/Infineon/mtb-bt-bsp-manifest/raw/v2.X/mtb-bt-bsp-manifest-fv2.xml'
+Finished download of file 'https://github.com/Infineon/mtb-bt-bsp-manifest/raw/v2.X/mtb-bt-bsp-dependencies-manifest.xml'
+Finished download of file 'https://github.com/Inventek/inventek-bsp-manifest/raw/main/inventek-bsp-manifest-fv2.xml'
+Finished download of file 'https://github.com/Inventek/inventek-bsp-manifest/raw/main/inventek-bsp-dependencies-manifest.xml'
+Finished download of file 'https://github.com/RutronikSystemSolutions/rutronik-bsp-manifest/raw/main/rutronik-bsp-manifest-fv2.xml'
+Finished download of file 'https://github.com/RutronikSystemSolutions/rutronik-bsp-manifest/raw/main/rutronik-bsp-dependencies-manifest.xml'
+Finished download of file 'https://github.com/Infineon/mtb-mw-manifest/raw/v2.X/mtb-mw-manifest.xml'
+Finished download of file 'https://github.com/Infineon/mtb-mw-manifest/raw/v2.X/mtb-mw-manifest-fv2.xml'
+Finished download of file 'https://github.com/Infineon/mtb-mw-manifest/raw/v2.X/mtb-mw-dependencies-manifest.xml'
+Finished download of file 'https://github.com/Infineon/mtb-t2g-mw-manifest/raw/main/mtb-t2g-mw-manifest-fv2.xml'
+Finished download of file 'https://github.com/Infineon/mtb-t2g-mw-manifest/raw/main/mtb-t2g-mw-dependencies-manifest.xml'
+Finished download of file 'https://github.com/Infineon/mtb-bt-mw-manifest/raw/v2.X/mtb-bt-mw-manifest.xml'
+Finished download of file 'https://github.com/Infineon/mtb-bt-mw-manifest/raw/v2.X/mtb-bt-mw-manifest-fv2.xml'
+Finished download of file 'https://github.com/Infineon/mtb-bt-mw-manifest/raw/v2.X/mtb-bt-mw-dependencies-manifest.xml'
+Finished download of file 'https://github.com/Infineon/mtb-wifi-mw-manifest/raw/v2.X/mtb-wifi-mw-manifest.xml'
+Finished download of file 'https://github.com/Infineon/mtb-wifi-mw-manifest/raw/v2.X/mtb-wifi-mw-manifest-fv2.xml'
+Finished download of file 'https://github.com/Infineon/mtb-wifi-mw-manifest/raw/v2.X/mtb-wifi-mw-dependencies-manifest.xml'
+Finished download of file 'https://github.com/avnet-iotconnect/avnet-iotc-mtb-mw-manifest/raw/main/avnet-iotc-mtb-mw-manifest-fv2.xml'
+Finished download of file 'https://github.com/CyberonEBU/cyberon-mtb-mw-manifest/raw/main/cyberon-mtb-mw-manifest-fv2.xml'
+Finished download of file 'https://github.com/golioth/mtb-golioth-mw-manifest/raw/main/mtb-golioth-mw-manifest-fv2.xml'
+Finished download of file 'https://github.com/rtlabs-com/mtb-rtlabs-manifest/raw/main/rtlabs-mtb-mw-manifest-fw2-rtlabs.xml'
+Finished download of file 'https://github.com/Infineon/mtb-sdk-20829-json/raw/main/mtb-sdk-manifest-20829b1.json'
+Starting to parse SDK manifest with URL 'https://github.com/Infineon/mtb-sdk-20829-json/raw/main/mtb-sdk-manifest-20829b1.json'
+Finished parsing SDK manifest with URL 'https://github.com/Infineon/mtb-sdk-20829-json/raw/main/mtb-sdk-manifest-20829b1.json'
+Finished loading the manifest data (1975 ms)
+No SDK-based filtering is applied to the manifest database contents.
+For dependency records within the same domain, with the same depender ID, version, and dependee ID, the dependee with the highest version takes precedence. Discarded record(s): "ml-middleware(release-v2.0.1) depends on ml-tflite-micro(release-v2.0.0)[SYSTEM]". Retained record: "ml-middleware(release-v2.0.1) depends on ml-tflite-micro(release-v2.0.1)[SYSTEM]".
+
+Starting to refresh dependencies for project 'mtb-example-psoc6-radar-presence'.
+Refreshed all dependencies for project 'mtb-example-psoc6-radar-presence'.
+0 error(s), 0 warning(s)
+Successfully acquired the information.
+Requested to add the asset 'serial-flash'.
+Starting to refresh dependencies for project 'mtb-example-psoc6-radar-presence'.
+Refreshed all dependencies for project 'mtb-example-psoc6-radar-presence'.
+
+Starting to refresh dependencies for project 'mtb-example-psoc6-radar-presence'.
+Refreshed all dependencies for project 'mtb-example-psoc6-radar-presence'.
+
+Changelog for project "workingDir":
+serial-flash version release-v1.4.3 added
+
+Click "Update" to commit the changesUpdating application "workingDir" ...
+Starting to commit changes to the filesystem and project 'mtb-example-psoc6-radar-presence'.
+Writing mtb file for asset 'serial-flash' to the folder 'C:/Users/adams/Learning/PSoC6-ai-board/workingDir/deps'.
+Git#0>Starting: git -C C:/Users/adams/Learning/PSoC6-ai-board/mtb_shared/freertos/latest-v10.X fetch --recurse-submodules=no --tags --force cypress --update-head-ok "refs/heads/*:refs/heads/*" --progress
+Git#1>Starting: git -C C:/Users/adams/Learning/PSoC6-ai-board/mtb_shared/retarget-io/latest-v1.X fetch --recurse-submodules=no --tags --force cypress --update-head-ok "refs/heads/*:refs/heads/*" --progress
+Git#2>Starting: git -C C:/Users/adams/Learning/PSoC6-ai-board/mtb_shared/sensor-xensiv-bgt60trxx/latest-v1.X fetch --recurse-submodules=no --tags --force cypress --update-head-ok "refs/heads/*:refs/heads/*" --progress
+Git#3>Starting: git -C C:/Users/adams/Learning/PSoC6-ai-board/mtb_shared/xensiv-radar-presence/latest-v1.X fetch --recurse-submodules=no --tags --force cypress --update-head-ok "refs/heads/*:refs/heads/*" --progress
+Git#0>Success: git -C C:/Users/adams/Learning/PSoC6-ai-board/mtb_shared/freertos/latest-v10.X fetch --recurse-submodules=no --tags --force cypress --update-head-ok "refs/heads/*:refs/heads/*" --progress
+Git#4>Starting: git -C C:/Users/adams/Learning/PSoC6-ai-board/mtb_shared/serial-flash clone --progress --origin cypress --no-checkout --filter=blob:none https://github.com/cypresssemiconductorco/serial-flash release-v1.4.3
+Git#1>Success: git -C C:/Users/adams/Learning/PSoC6-ai-board/mtb_shared/retarget-io/latest-v1.X fetch --recurse-submodules=no --tags --force cypress --update-head-ok "refs/heads/*:refs/heads/*" --progress
+Git#5>Starting: git -C C:/Users/adams/Learning/PSoC6-ai-board/mtb_shared/abstraction-rtos/release-v1.12.0 -c advice.detachedHead=false checkout --progress release-v1.12.0
+Git#2>Success: git -C C:/Users/adams/Learning/PSoC6-ai-board/mtb_shared/sensor-xensiv-bgt60trxx/latest-v1.X fetch --recurse-submodules=no --tags --force cypress --update-head-ok "refs/heads/*:refs/heads/*" --progress
+Git#6>Starting: git -C C:/Users/adams/Learning/PSoC6-ai-board/mtb_shared/bt-fw-mur-cyw43439/release-v1.0.0 -c advice.detachedHead=false checkout --progress release-v1.0.0
+Git#3>Success: git -C C:/Users/adams/Learning/PSoC6-ai-board/mtb_shared/xensiv-radar-presence/latest-v1.X fetch --recurse-submodules=no --tags --force cypress --update-head-ok "refs/heads/*:refs/heads/*" --progress
+Git#7>Starting: git -C C:/Users/adams/Learning/PSoC6-ai-board/mtb_shared/cat1cm0p/release-v1.11.0 -c advice.detachedHead=false checkout --progress release-v1.11.0
+Git#4>Cloning into 'release-v1.4.3'...
+Git#6>HEAD is now at 7d70bc2 Upload bt-fw-mur-cyw43439 1.0.0.2595 [3108]
+Git#6>Success: git -C C:/Users/adams/Learning/PSoC6-ai-board/mtb_shared/bt-fw-mur-cyw43439/release-v1.0.0 -c advice.detachedHead=false checkout --progress release-v1.0.0
+Finished processing bt-fw-mur-cyw43439
+Git#8>Starting: git -C C:/Users/adams/Learning/PSoC6-ai-board/mtb_shared/clib-support/release-v1.8.0 -c advice.detachedHead=false checkout --progress release-v1.8.0
+Git#7>HEAD is now at b2f7229 Upload cat1cm0p 1.11.0.774 [5035]
+Git#7>Success: git -C C:/Users/adams/Learning/PSoC6-ai-board/mtb_shared/cat1cm0p/release-v1.11.0 -c advice.detachedHead=false checkout --progress release-v1.11.0
+Finished processing cat1cm0p
+Git#9>Starting: git -C C:/Users/adams/Learning/PSoC6-ai-board/mtb_shared/CMSIS-DSP/v1.10.1 -c advice.detachedHead=false checkout --progress v1.10.1
+Git#8>HEAD is now at 5e534ad Upload clib-support [4092]
+Git#8>Success: git -C C:/Users/adams/Learning/PSoC6-ai-board/mtb_shared/clib-support/release-v1.8.0 -c advice.detachedHead=false checkout --progress release-v1.8.0
+Finished processing clib-support
+Git#10>Starting: git -C C:/Users/adams/Learning/PSoC6-ai-board/mtb_shared/cmsis/release-v6.1.0 -c advice.detachedHead=false checkout --progress release-v6.1.0
+Git#4>remote: Enumerating objects: 45, done.        
+Git#4>remote: Counting objects:   7% (1/13)        
+Git#4>remote: Counting objects:  15% (2/13)        
+Git#4>remote: Counting objects:  23% (3/13)        
+Git#4>remote: Counting objects:  30% (4/13)        
+Git#4>remote: Counting objects:  38% (5/13)        
+Git#4>remote: Counting objects:  46% (6/13)        
+Git#4>remote: Counting objects:  53% (7/13)        
+Git#4>remote: Counting objects:  61% (8/13)        
+Git#4>remote: Counting objects:  69% (9/13)        
+Git#4>remote: Counting objects:  76% (10/13)        
+Git#4>remote: Counting objects:  84% (11/13)        
+Git#4>remote: Counting objects:  92% (12/13)        
+Git#4>remote: Counting objects: 100% (13/13)        
+Git#4>remote: Counting objects: 100% (13/13), done.        
+Git#4>remote: Compressing objects:  10% (1/10)        
+Git#4>remote: Compressing objects:  20% (2/10)        
+Git#4>remote: Compressing objects:  30% (3/10)        
+Git#4>remote: Compressing objects:  40% (4/10)        
+Git#4>remote: Compressing objects:  50% (5/10)        
+Git#4>remote: Compressing objects:  60% (6/10)        
+Git#4>remote: Compressing objects:  70% (7/10)        
+Git#4>remote: Compressing objects:  80% (8/10)        
+Git#4>remote: Compressing objects:  90% (9/10)        
+Git#4>remote: Compressing objects: 100% (10/10)        
+Git#4>remote: Compressing objects: 100% (10/10), done.        
+Git#4>remote: Total 45 (delta 4), reused 11 (delta 3), pack-reused 32 (from 1)        
+Git#4>Receiving objects:   2% (1/45)
+Git#4>Receiving objects:   4% (2/45)
+Git#4>Receiving objects:   6% (3/45)
+Git#4>Receiving objects:   8% (4/45)
+Git#4>Receiving objects:  11% (5/45)
+Git#4>Receiving objects:  13% (6/45)
+Git#4>Receiving objects:  15% (7/45)
+Git#4>Receiving objects:  17% (8/45)
+Git#4>Receiving objects:  20% (9/45)
+Git#4>Receiving objects:  22% (10/45)
+Git#4>Receiving objects:  24% (11/45)
+Git#4>Receiving objects:  26% (12/45)
+Git#4>Receiving objects:  28% (13/45)
+Git#4>Receiving objects:  31% (14/45)
+Git#4>Receiving objects:  33% (15/45)
+Git#4>Receiving objects:  35% (16/45)
+Git#4>Receiving objects:  37% (17/45)
+Git#4>Receiving objects:  40% (18/45)
+Git#4>Receiving objects:  42% (19/45)
+Git#4>Receiving objects:  44% (20/45)
+Git#4>Receiving objects:  46% (21/45)
+Git#4>Receiving objects:  48% (22/45)
+Git#4>Receiving objects:  51% (23/45)
+Git#4>Receiving objects:  53% (24/45)
+Git#4>Receiving objects:  55% (25/45)
+Git#4>Receiving objects:  57% (26/45)
+Git#4>Receiving objects:  60% (27/45)
+Git#4>Receiving objects:  62% (28/45)
+Git#4>Receiving objects:  64% (29/45)
+Git#4>Receiving objects:  66% (30/45)
+Git#4>Receiving objects:  68% (31/45)
+Git#4>Receiving objects:  71% (32/45)
+Git#4>Receiving objects:  73% (33/45)
+Git#4>Receiving objects:  75% (34/45)
+Git#4>Receiving objects:  77% (35/45)
+Git#4>Receiving objects:  80% (36/45)
+Git#4>Receiving objects:  82% (37/45)
+Git#4>Receiving objects:  84% (38/45)
+Git#4>Receiving objects:  86% (39/45)
+Git#4>Receiving objects:  88% (40/45)
+Git#4>Receiving objects:  91% (41/45)
+Git#4>Receiving objects:  93% (42/45)
+Git#4>Receiving objects:  95% (43/45)
+Git#4>Receiving objects:  97% (44/45)
+Git#4>Receiving objects: 100% (45/45)
+Git#4>Receiving objects: 100% (45/45), 10.38 KiB | 2.08 MiB/s, done.
+Git#4>Resolving deltas:   0% (0/15)
+Git#4>Resolving deltas:   6% (1/15)
+Git#4>Resolving deltas:  13% (2/15)
+Git#4>Resolving deltas:  20% (3/15)
+Git#4>Resolving deltas:  26% (4/15)
+Git#4>Resolving deltas:  33% (5/15)
+Git#4>Resolving deltas:  40% (6/15)
+Git#4>Resolving deltas:  46% (7/15)
+Git#4>Resolving deltas:  53% (8/15)
+Git#4>Resolving deltas:  60% (9/15)
+Git#4>Resolving deltas:  66% (10/15)
+Git#4>Resolving deltas:  73% (11/15)
+Git#4>Resolving deltas:  80% (12/15)
+Git#4>Resolving deltas:  86% (13/15)
+Git#4>Resolving deltas:  93% (14/15)
+Git#4>Resolving deltas: 100% (15/15)
+Git#4>Resolving deltas: 100% (15/15), done.
+Git#4>Success: git -C C:/Users/adams/Learning/PSoC6-ai-board/mtb_shared/serial-flash clone --progress --origin cypress --no-checkout --filter=blob:none https://github.com/cypresssemiconductorco/serial-flash release-v1.4.3
+Git#11>Starting: git -C C:/Users/adams/Learning/PSoC6-ai-board/mtb_shared/core-lib/release-v1.7.0 -c advice.detachedHead=false checkout --progress release-v1.7.0
+Git#11>HEAD is now at b2a7ce7 Upload core-lib [4611]
+Git#11>Success: git -C C:/Users/adams/Learning/PSoC6-ai-board/mtb_shared/core-lib/release-v1.7.0 -c advice.detachedHead=false checkout --progress release-v1.7.0
+Finished processing core-lib
+Git#12>Starting: git -C C:/Users/adams/Learning/PSoC6-ai-board/mtb_shared/core-make/release-v3.9.0 -c advice.detachedHead=false checkout --progress release-v3.9.0
+Git#5>HEAD is now at 1b07347 Upload abstraction-rtos [4092]
+Git#5>Success: git -C C:/Users/adams/Learning/PSoC6-ai-board/mtb_shared/abstraction-rtos/release-v1.12.0 -c advice.detachedHead=false checkout --progress release-v1.12.0
+Finished processing abstraction-rtos
+Git#13>Starting: git -C C:/Users/adams/.modustoolbox/global/device-db/release-v4.37.0 -c advice.detachedHead=false checkout --progress release-v4.37.0
+Git#12>HEAD is now at 878e5ae Upload core-make [4881]
+Git#12>Success: git -C C:/Users/adams/Learning/PSoC6-ai-board/mtb_shared/core-make/release-v3.9.0 -c advice.detachedHead=false checkout --progress release-v3.9.0
+Finished processing core-make
+Git#14>Starting: git -C C:/Users/adams/Learning/PSoC6-ai-board/mtb_shared/mtb-hal-cat1/release-v2.7.4 -c advice.detachedHead=false checkout --progress release-v2.7.4
+Git#9>HEAD is now at 9d88671 Changed path to VHT in Examples
+Git#9>Success: git -C C:/Users/adams/Learning/PSoC6-ai-board/mtb_shared/CMSIS-DSP/v1.10.1 -c advice.detachedHead=false checkout --progress v1.10.1
+Finished processing CMSIS-DSP
+Git#15>Starting: git -C C:/Users/adams/Learning/PSoC6-ai-board/mtb_shared/mtb-pdl-cat1/release-v3.22.0 -c advice.detachedHead=false checkout --progress release-v3.22.0
+Git#13>HEAD is now at c06fce9a Upload device-db 4.37.0.10260 [4794]
+Git#13>Success: git -C C:/Users/adams/.modustoolbox/global/device-db/release-v4.37.0 -c advice.detachedHead=false checkout --progress release-v4.37.0
+Finished processing device-db
+Git#16>Starting: git -C C:/Users/adams/Learning/PSoC6-ai-board/mtb_shared/recipe-make-cat1a/release-v2.7.0 -c advice.detachedHead=false checkout --progress release-v2.7.0
+Git#16>HEAD is now at ee88021 Upload recipe-make-cat1a [4740]
+Git#16>Success: git -C C:/Users/adams/Learning/PSoC6-ai-board/mtb_shared/recipe-make-cat1a/release-v2.7.0 -c advice.detachedHead=false checkout --progress release-v2.7.0
+Finished processing recipe-make-cat1a
+Git#17>Starting: git -C C:/Users/adams/Learning/PSoC6-ai-board/mtb_shared/sensor-dsp/release-v1.0.0 -c advice.detachedHead=false checkout --progress release-v1.0.0
+Git#10>HEAD is now at d00730d Upload cmsis 6.1.0.171 [3998]
+Git#10>Success: git -C C:/Users/adams/Learning/PSoC6-ai-board/mtb_shared/cmsis/release-v6.1.0 -c advice.detachedHead=false checkout --progress release-v6.1.0
+Finished processing cmsis
+Git#18>Starting: git -C C:/Users/adams/Learning/PSoC6-ai-board/mtb_shared/freertos/latest-v10.X -c advice.detachedHead=false checkout --progress latest-v10.X
+Git#17>HEAD is now at e3881f9 Upload sensor-dsp 1.0.0.370 [521]
+Git#17>Success: git -C C:/Users/adams/Learning/PSoC6-ai-board/mtb_shared/sensor-dsp/release-v1.0.0 -c advice.detachedHead=false checkout --progress release-v1.0.0
+Finished processing sensor-dsp
+Git#19>Starting: git -C C:/Users/adams/Learning/PSoC6-ai-board/mtb_shared/retarget-io/latest-v1.X -c advice.detachedHead=false checkout --progress latest-v1.X
+Git#19>HEAD is now at b12aaf1 Upload retarget-io [4394]
+Git#19>Success: git -C C:/Users/adams/Learning/PSoC6-ai-board/mtb_shared/retarget-io/latest-v1.X -c advice.detachedHead=false checkout --progress latest-v1.X
+Finished processing retarget-io
+Git#20>Starting: git -C C:/Users/adams/Learning/PSoC6-ai-board/mtb_shared/sensor-xensiv-bgt60trxx/latest-v1.X -c advice.detachedHead=false checkout --progress latest-v1.X
+Git#18>HEAD is now at 8a19c8d Upload freertos [4326]
+Git#18>Success: git -C C:/Users/adams/Learning/PSoC6-ai-board/mtb_shared/freertos/latest-v10.X -c advice.detachedHead=false checkout --progress latest-v10.X
+Finished processing freertos
+Git#21>Starting: git -C C:/Users/adams/Learning/PSoC6-ai-board/mtb_shared/xensiv-radar-presence/latest-v1.X -c advice.detachedHead=false checkout --progress latest-v1.X
+Git#20>HEAD is now at 81afebe Upload sensor-xensiv-bgt60trxx 1.1.0.224 [2064]
+Git#20>Success: git -C C:/Users/adams/Learning/PSoC6-ai-board/mtb_shared/sensor-xensiv-bgt60trxx/latest-v1.X -c advice.detachedHead=false checkout --progress latest-v1.X
+Finished processing sensor-xensiv-bgt60trxx
+Git#22>Starting: git -C C:/Users/adams/Learning/PSoC6-ai-board/mtb_shared/serial-flash/release-v1.4.3 -c advice.detachedHead=false checkout --progress release-v1.4.3
+Git#21>HEAD is now at b2d6a2f Upload xensiv-radar-presence 1.0.0.449 [521]
+Git#21>Success: git -C C:/Users/adams/Learning/PSoC6-ai-board/mtb_shared/xensiv-radar-presence/latest-v1.X -c advice.detachedHead=false checkout --progress latest-v1.X
+Finished processing xensiv-radar-presence
+Git#22>Updating files:  33% (21/63)
+Git#22>Updating files:  34% (22/63)
+Git#22>Updating files:  36% (23/63)
+Git#22>Updating files:  38% (24/63)
+Git#22>Updating files:  39% (25/63)
+Git#22>Updating files:  41% (26/63)
+Git#22>Updating files:  42% (27/63)
+Git#22>Updating files:  44% (28/63)
+Git#22>Updating files:  46% (29/63)
+Git#22>Updating files:  47% (30/63)
+Git#22>Updating files:  49% (31/63)
+Git#22>Updating files:  50% (32/63)
+Git#22>Updating files:  52% (33/63)
+Git#22>Updating files:  53% (34/63)
+Git#22>Updating files:  55% (35/63)
+Git#22>Updating files:  57% (36/63)
+Git#22>Updating files:  58% (37/63)
+Git#22>Updating files:  60% (38/63)
+Git#22>Updating files:  61% (39/63)
+Git#22>Updating files:  63% (40/63)
+Git#22>Updating files:  65% (41/63)
+Git#22>Updating files:  66% (42/63)
+Git#22>Updating files:  68% (43/63)
+Git#22>Updating files:  69% (44/63)
+Git#22>Updating files:  71% (45/63)
+Git#22>Updating files:  73% (46/63)
+Git#22>Updating files:  74% (47/63)
+Git#22>Updating files:  76% (48/63)
+Git#22>Updating files:  77% (49/63)
+Git#22>Updating files:  79% (50/63)
+Git#22>Updating files:  80% (51/63)
+Git#22>Updating files:  82% (52/63)
+Git#22>Updating files:  84% (53/63)
+Git#22>Updating files:  85% (54/63)
+Git#22>Updating files:  87% (55/63)
+Git#22>Updating files:  88% (56/63)
+Git#22>Updating files:  90% (57/63)
+Git#22>Updating files:  92% (58/63)
+Git#22>Updating files:  93% (59/63)
+Git#22>Updating files:  95% (60/63)
+Git#22>Updating files:  96% (61/63)
+Git#22>Updating files:  98% (62/63)
+Git#22>Updating files: 100% (63/63)
+Git#22>Updating files: 100% (63/63), done.
+Git#22>HEAD is now at 23966ce Upload serial-flash [3108]
+Git#22>Success: git -C C:/Users/adams/Learning/PSoC6-ai-board/mtb_shared/serial-flash/release-v1.4.3 -c advice.detachedHead=false checkout --progress release-v1.4.3
+Finished processing serial-flash
+Git#14>HEAD is now at c255813 Upload mtb-hal-cat1 [3856]
+Git#14>Success: git -C C:/Users/adams/Learning/PSoC6-ai-board/mtb_shared/mtb-hal-cat1/release-v2.7.4 -c advice.detachedHead=false checkout --progress release-v2.7.4
+Finished processing mtb-hal-cat1
+Git#15>HEAD is now at 362565d Upload mtb-pdl-cat1 3.22.0.46429 [5035]
+Git#15>Success: git -C C:/Users/adams/Learning/PSoC6-ai-board/mtb_shared/mtb-pdl-cat1/release-v3.22.0 -c advice.detachedHead=false checkout --progress release-v3.22.0
+Finished processing mtb-pdl-cat1
+Successfully committed changes to the project 'mtb-example-psoc6-radar-presence'.
+0 error(s), 0 warning(s)
+Successfully updated application "workingDir"
+
+Starting to refresh dependencies for project 'mtb-example-psoc6-radar-presence'.
+Refreshed all dependencies for project 'mtb-example-psoc6-radar-presence'.
+
+Summary:
+Successfully updated application "workingDir"
+Successfully refreshed dependencies.
+Done.

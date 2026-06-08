@@ -45,6 +45,7 @@
 #include "cy_retarget_io.h"
 
 #include "FreeRTOS.h"
+#include "logging/logger.h"
 #include "task.h"
 #include "queue.h"
 #include "timers.h"
@@ -66,10 +67,10 @@
 #include "optimization_list.h"
 
 // The tasks. Each .c file has one task, and the main task is in main.c because it owns the main() function. The others are in their own .c files to keep things tidy.
-#include "i2c_bus.h"
-#include "barometer_task.h"
-#include "imu_task.h"
-#include "mag_task.h"
+#include "drivers.h"
+#include "tasks.h"
+
+
 /*******************************************************************************
 * Macros
 ********************************************************************************/
@@ -300,6 +301,8 @@ static __NO_RETURN void main_task(void *pvParameters)
     cy_rslt_t result;
     XENSIV_RADAR_PRESENCE_TIMESTAMP last_timestamp = 0;
 
+    logger_init();
+    logger_set_mode(LOG_MODE_HUMAN);
     timer_handler = xTimerCreate("timer", pdMS_TO_TICKS(1000), pdTRUE, NULL, timer_callbak);    
     if (timer_handler == NULL)
     {
@@ -329,18 +332,47 @@ static __NO_RETURN void main_task(void *pvParameters)
     /* ---- 9-DOF I2C sensor stack (DPS368 + BMI270 + BMM350) ---- */
     if (i2c_bus_init() == CY_RSLT_SUCCESS)
         {
-            barometer_task_init();
+            //barometer_task_init();
             vTaskDelay(pdMS_TO_TICKS(150));
-            imu_task_init();
+            //imu_task_init();
             vTaskDelay(pdMS_TO_TICKS(750));   // ← more time before mag; BMM350 init is slow
-            mag_task_init();
+            //mag_task_init();
+            vTaskDelay(pdMS_TO_TICKS(500));
+            //mic_task_init();
             printf("[sensors] 9-DOF I2C stack online\r\n");
         }
     else
         {
             printf("[sensors] i2c_bus_init FAILED\r\n");
         }
+        
     /* ----------------------------------------------------------- */
+    /* ---- QSPI flash bring-up: erase, write, read-back, verify ---- */
+    if (qspi_flash_init() == CY_RSLT_SUCCESS)
+    {
+        printf("[qspi] flash up: %lu bytes, %lu-byte sectors\r\n",
+               (unsigned long)qspi_flash_total_size(),
+               (unsigned long)qspi_flash_sector_size());
+
+        const uint32_t test_addr = 0x0;
+        uint8_t  wbuf[16] = {0xDE,0xAD,0xBE,0xEF,0x01,0x02,0x03,0x04,
+                             0x05,0x06,0x07,0x08,0xCA,0xFE,0xBA,0xBE};
+        uint8_t  rbuf[16] = {0};
+
+        qspi_flash_erase(test_addr, qspi_flash_sector_size());  /* erase before write */
+        qspi_flash_write(test_addr, wbuf, sizeof(wbuf));
+        qspi_flash_read (test_addr, rbuf, sizeof(rbuf));
+
+        bool ok = (memcmp(wbuf, rbuf, sizeof(wbuf)) == 0);
+        printf("[qspi] round-trip %s (read back %02X %02X %02X %02X ...)\r\n",
+               ok ? "PASS" : "FAIL", rbuf[0], rbuf[1], rbuf[2], rbuf[3]);
+    }
+    else
+    {
+        printf("[qspi] flash init FAILED\r\n");
+    }
+    /* -------------------------------------------------------------- */
+
 
     mgr.subscribe(main_task_handler);
 
