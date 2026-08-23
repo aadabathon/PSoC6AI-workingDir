@@ -75,8 +75,8 @@ bsp-assistant:
 	$(CY_TOOL_mtblaunch_EXE_ABS) --project . --short-name bsp-assistant
 .PHONY: bsp-assistant
 
-CY_HELP_bsp-assistant=Launches the BSP Assistant 1.60 GUI
-CY_HELP_bsp-assistant_VERBOSE=Launches the BSP Assistant 1.60 GUI. Check the BSP Assistant 1.60 User Guide for more information.
+CY_HELP_bsp-assistant=Launches the BSP Assistant 1.70 GUI
+CY_HELP_bsp-assistant_VERBOSE=Launches the BSP Assistant 1.70 GUI. Check the BSP Assistant 1.70 User Guide for more information.
 mtb_help_tool_bsp-assistant:
 	@:
 	$(info $(MTB__SPACE)bsp-assistant       $(CY_HELP_bsp-assistant))
@@ -89,8 +89,8 @@ config_bt:
 	$(CY_TOOL_mtblaunch_EXE_ABS) --project . --short-name bt-configurator
 .PHONY: config_bt
 
-CY_HELP_config_bt=Launches the Bluetooth® Configurator 3.50 GUI for the target's cybt file
-CY_HELP_config_bt_VERBOSE=Launches the Bluetooth® Configurator 3.50 GUI. Check the Bluetooth® Configurator 3.50 User Guide for more information.
+CY_HELP_config_bt=Launches the Bluetooth® Configurator 3.60 GUI for the target's cybt file
+CY_HELP_config_bt_VERBOSE=Launches the Bluetooth® Configurator 3.60 GUI. Check the Bluetooth® Configurator 3.60 User Guide for more information.
 mtb_help_tool_config_bt:
 	@:
 	$(info $(MTB__SPACE)config_bt           $(CY_HELP_config_bt))
@@ -103,8 +103,8 @@ bt-configurator:
 	$(CY_TOOL_mtblaunch_EXE_ABS) --project . --short-name bt-configurator
 .PHONY: bt-configurator
 
-CY_HELP_bt-configurator=Launches the Bluetooth® Configurator 3.50 GUI for the target's cybt file
-CY_HELP_bt-configurator_VERBOSE=Launches the Bluetooth® Configurator 3.50 GUI. Check the Bluetooth® Configurator 3.50 User Guide for more information.
+CY_HELP_bt-configurator=Launches the Bluetooth® Configurator 3.60 GUI for the target's cybt file
+CY_HELP_bt-configurator_VERBOSE=Launches the Bluetooth® Configurator 3.60 GUI. Check the Bluetooth® Configurator 3.60 User Guide for more information.
 mtb_help_tool_bt-configurator:
 	@:
 	$(info $(MTB__SPACE)bt-configurator     $(CY_HELP_bt-configurator))
@@ -117,8 +117,8 @@ config:
 	$(CY_TOOL_mtblaunch_EXE_ABS) --project . --short-name device-configurator
 .PHONY: config
 
-CY_HELP_config=Launches the Device Configurator 5.60 GUI for the target's modus file
-CY_HELP_config_VERBOSE=Launches the Device Configurator 5.60 GUI. Check the Device Configurator 5.60 User Guide for more information.
+CY_HELP_config=Launches the Device Configurator 5.70 GUI for the target's modus file
+CY_HELP_config_VERBOSE=Launches the Device Configurator 5.70 GUI. Check the Device Configurator 5.70 User Guide for more information.
 mtb_help_tool_config:
 	@:
 	$(info $(MTB__SPACE)config              $(CY_HELP_config))
@@ -131,8 +131,8 @@ device-configurator:
 	$(CY_TOOL_mtblaunch_EXE_ABS) --project . --short-name device-configurator
 .PHONY: device-configurator
 
-CY_HELP_device-configurator=Launches the Device Configurator 5.60 GUI for the target's modus file
-CY_HELP_device-configurator_VERBOSE=Launches the Device Configurator 5.60 GUI. Check the Device Configurator 5.60 User Guide for more information.
+CY_HELP_device-configurator=Launches the Device Configurator 5.70 GUI for the target's modus file
+CY_HELP_device-configurator_VERBOSE=Launches the Device Configurator 5.70 GUI. Check the Device Configurator 5.70 User Guide for more information.
 mtb_help_tool_device-configurator:
 	@:
 	$(info $(MTB__SPACE)device-configurator $(CY_HELP_device-configurator))
@@ -145,8 +145,8 @@ modlibs:
 	$(CY_TOOL_mtblaunch_EXE_ABS) --project . --short-name library-manager
 .PHONY: modlibs
 
-CY_HELP_modlibs=Launches the Library Manager 2.60 GUI
-CY_HELP_modlibs_VERBOSE=Launches the Library Manager 2.60 GUI. Check the Library Manager 2.60 User Guide for more information.
+CY_HELP_modlibs=Launches the Library Manager 2.70 GUI
+CY_HELP_modlibs_VERBOSE=Launches the Library Manager 2.70 GUI. Check the Library Manager 2.70 User Guide for more information.
 mtb_help_tool_modlibs:
 	@:
 	$(info $(MTB__SPACE)modlibs             $(CY_HELP_modlibs))
@@ -159,8 +159,8 @@ library-manager:
 	$(CY_TOOL_mtblaunch_EXE_ABS) --project . --short-name library-manager
 .PHONY: library-manager
 
-CY_HELP_library-manager=Launches the Library Manager 2.60 GUI
-CY_HELP_library-manager_VERBOSE=Launches the Library Manager 2.60 GUI. Check the Library Manager 2.60 User Guide for more information.
+CY_HELP_library-manager=Launches the Library Manager 2.70 GUI
+CY_HELP_library-manager_VERBOSE=Launches the Library Manager 2.70 GUI. Check the Library Manager 2.70 User Guide for more information.
 mtb_help_tool_library-manager:
 	@:
 	$(info $(MTB__SPACE)library-manager     $(CY_HELP_library-manager))
@@ -173,8 +173,8 @@ config_lin:
 	$(CY_TOOL_mtblaunch_EXE_ABS) --project . --short-name lin-configurator
 .PHONY: config_lin
 
-CY_HELP_config_lin=Launches the LIN Configurator 1.80 GUI for the target's mtblin file
-CY_HELP_config_lin_VERBOSE=Launches the LIN Configurator 1.80 GUI. Check the LIN Configurator 1.80 User Guide for more information.
+CY_HELP_config_lin=Launches the LIN Configurator 1.90 GUI for the target's mtblin file
+CY_HELP_config_lin_VERBOSE=Launches the LIN Configurator 1.90 GUI. Check the LIN Configurator 1.90 User Guide for more information.
 mtb_help_tool_config_lin:
 	@:
 	$(info $(MTB__SPACE)config_lin          $(CY_HELP_config_lin))
@@ -187,8 +187,8 @@ lin-configurator:
 	$(CY_TOOL_mtblaunch_EXE_ABS) --project . --short-name lin-configurator
 .PHONY: lin-configurator
 
-CY_HELP_lin-configurator=Launches the LIN Configurator 1.80 GUI for the target's mtblin file
-CY_HELP_lin-configurator_VERBOSE=Launches the LIN Configurator 1.80 GUI. Check the LIN Configurator 1.80 User Guide for more information.
+CY_HELP_lin-configurator=Launches the LIN Configurator 1.90 GUI for the target's mtblin file
+CY_HELP_lin-configurator_VERBOSE=Launches the LIN Configurator 1.90 GUI. Check the LIN Configurator 1.90 User Guide for more information.
 mtb_help_tool_lin-configurator:
 	@:
 	$(info $(MTB__SPACE)lin-configurator    $(CY_HELP_lin-configurator))
@@ -201,8 +201,8 @@ qspi-configurator:
 	$(CY_TOOL_mtblaunch_EXE_ABS) --project . --short-name qspi-configurator
 .PHONY: qspi-configurator
 
-CY_HELP_qspi-configurator=Launches the QSPI Configurator 4.70 GUI for the target's cyqspi file
-CY_HELP_qspi-configurator_VERBOSE=Launches the QSPI Configurator 4.70 GUI. Check the QSPI Configurator 4.70 User Guide for more information.
+CY_HELP_qspi-configurator=Launches the QSPI Configurator 4.80 GUI for the target's cyqspi file
+CY_HELP_qspi-configurator_VERBOSE=Launches the QSPI Configurator 4.80 GUI. Check the QSPI Configurator 4.80 User Guide for more information.
 mtb_help_tool_qspi-configurator:
 	@:
 	$(info $(MTB__SPACE)qspi-configurator   $(CY_HELP_qspi-configurator))
@@ -215,8 +215,8 @@ seglcd-configurator:
 	$(CY_TOOL_mtblaunch_EXE_ABS) --project . --short-name seglcd-configurator
 .PHONY: seglcd-configurator
 
-CY_HELP_seglcd-configurator=Launches the Segment LCD Configurator 1.100 GUI for the target's cyseglcd file
-CY_HELP_seglcd-configurator_VERBOSE=Launches the Segment LCD Configurator 1.100 GUI. Check the Segment LCD Configurator 1.100 User Guide for more information.
+CY_HELP_seglcd-configurator=Launches the Segment LCD Configurator 1.110 GUI for the target's cyseglcd file
+CY_HELP_seglcd-configurator_VERBOSE=Launches the Segment LCD Configurator 1.110 GUI. Check the Segment LCD Configurator 1.110 User Guide for more information.
 mtb_help_tool_seglcd-configurator:
 	@:
 	$(info $(MTB__SPACE)seglcd-configurator $(CY_HELP_seglcd-configurator))
@@ -229,8 +229,8 @@ smartio-configurator:
 	$(CY_TOOL_mtblaunch_EXE_ABS) --project . --short-name smartio-configurator
 .PHONY: smartio-configurator
 
-CY_HELP_smartio-configurator=Launches the Smart I/O Configurator 4.60 GUI for the target's modus file
-CY_HELP_smartio-configurator_VERBOSE=Launches the Smart I/O Configurator 4.60 GUI. Check the Smart I/O Configurator 4.60 User Guide for more information.
+CY_HELP_smartio-configurator=Launches the Smart I/O Configurator 4.70 GUI for the target's modus file
+CY_HELP_smartio-configurator_VERBOSE=Launches the Smart I/O Configurator 4.70 GUI. Check the Smart I/O Configurator 4.70 User Guide for more information.
 mtb_help_tool_smartio-configurator:
 	@:
 	$(info $(MTB__SPACE)smartio-configurator $(CY_HELP_smartio-configurator))
@@ -243,8 +243,8 @@ config_usbdev:
 	$(CY_TOOL_mtblaunch_EXE_ABS) --project . --short-name usbdev-configurator
 .PHONY: config_usbdev
 
-CY_HELP_config_usbdev=Launches the USB Configurator [for USBDEV middleware] 3.10 GUI for the target's cyusbdev file
-CY_HELP_config_usbdev_VERBOSE=Launches the USB Configurator [for USBDEV middleware] 3.10 GUI. Check the USB Configurator [for USBDEV middleware] 3.10 User Guide for more information.
+CY_HELP_config_usbdev=Launches the USB Configurator [for USBDEV middleware] 3.20 GUI for the target's cyusbdev file
+CY_HELP_config_usbdev_VERBOSE=Launches the USB Configurator [for USBDEV middleware] 3.20 GUI. Check the USB Configurator [for USBDEV middleware] 3.20 User Guide for more information.
 mtb_help_tool_config_usbdev:
 	@:
 	$(info $(MTB__SPACE)config_usbdev       $(CY_HELP_config_usbdev))
@@ -257,8 +257,8 @@ usbdev-configurator:
 	$(CY_TOOL_mtblaunch_EXE_ABS) --project . --short-name usbdev-configurator
 .PHONY: usbdev-configurator
 
-CY_HELP_usbdev-configurator=Launches the USB Configurator [for USBDEV middleware] 3.10 GUI for the target's cyusbdev file
-CY_HELP_usbdev-configurator_VERBOSE=Launches the USB Configurator [for USBDEV middleware] 3.10 GUI. Check the USB Configurator [for USBDEV middleware] 3.10 User Guide for more information.
+CY_HELP_usbdev-configurator=Launches the USB Configurator [for USBDEV middleware] 3.20 GUI for the target's cyusbdev file
+CY_HELP_usbdev-configurator_VERBOSE=Launches the USB Configurator [for USBDEV middleware] 3.20 GUI. Check the USB Configurator [for USBDEV middleware] 3.20 User Guide for more information.
 mtb_help_tool_usbdev-configurator:
 	@:
 	$(info $(MTB__SPACE)usbdev-configurator $(CY_HELP_usbdev-configurator))
@@ -271,8 +271,8 @@ capsense-configurator:
 	$(CY_TOOL_mtblaunch_EXE_ABS) --project . --short-name capsense-configurator
 .PHONY: capsense-configurator
 
-CY_HELP_capsense-configurator=Launches the CAPSENSE™ Configurator 10.0 GUI for the target's cycapsense file
-CY_HELP_capsense-configurator_VERBOSE=Launches the CAPSENSE™ Configurator 10.0 GUI. Check the CAPSENSE™ Configurator 10.0 User Guide for more information.
+CY_HELP_capsense-configurator=Launches the CAPSENSE™ Configurator 11.0 GUI for the target's cycapsense file
+CY_HELP_capsense-configurator_VERBOSE=Launches the CAPSENSE™ Configurator 11.0 GUI. Check the CAPSENSE™ Configurator 11.0 User Guide for more information.
 mtb_help_tool_capsense-configurator:
 	@:
 	$(info $(MTB__SPACE)capsense-configurator $(CY_HELP_capsense-configurator))
@@ -285,8 +285,8 @@ capsense-tuner:
 	$(CY_TOOL_mtblaunch_EXE_ABS) --project . --short-name capsense-tuner
 .PHONY: capsense-tuner
 
-CY_HELP_capsense-tuner=Launches the CAPSENSE™ Tuner 10.0 GUI for the target's cycapsense file
-CY_HELP_capsense-tuner_VERBOSE=Launches the CAPSENSE™ Tuner 10.0 GUI. Check the CAPSENSE™ Tuner 10.0 User Guide for more information.
+CY_HELP_capsense-tuner=Launches the CAPSENSE™ Tuner 11.0 GUI for the target's cycapsense file
+CY_HELP_capsense-tuner_VERBOSE=Launches the CAPSENSE™ Tuner 11.0 GUI. Check the CAPSENSE™ Tuner 11.0 User Guide for more information.
 mtb_help_tool_capsense-tuner:
 	@:
 	$(info $(MTB__SPACE)capsense-tuner      $(CY_HELP_capsense-tuner))

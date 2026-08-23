@@ -248,6 +248,7 @@ int main(void)
 
 #endif
 
+#if 0   /* radar demo disabled -- IMU-only data collection pipeline for now */
     mgr.in_read_radar_data = read_radar_data;
     radar_data_manager_init(&mgr, NUM_SAMPLES_PER_FRAME *6, NUM_SAMPLES_PER_FRAME *2);
     radar_data_manager_set_malloc_free(pvPortMalloc,
@@ -261,6 +262,11 @@ int main(void)
            "Human presence detection using XENSIV 60-GHz radar\r\n"
            );
     printf("Press ENTER to enter setup mode, press ESC to quit setup mode \r\n");
+#else
+    printf("\x1b[2J\x1b[;H");
+    printf("****************** IMU data logger ****************** \r\n\n"
+           "BMI270 IMU -> CSV over serial for DeepCraft\r\n");
+#endif
 
     /* Create the RTOS task */
     if (xTaskCreate(main_task, MAIN_TASK_NAME, MAIN_TASK_STACK_SIZE, NULL, MAIN_TASK_PRIORITY, &main_task_handler) != pdPASS)
@@ -302,7 +308,7 @@ static __NO_RETURN void main_task(void *pvParameters)
     XENSIV_RADAR_PRESENCE_TIMESTAMP last_timestamp = 0;
 
     logger_init();
-    logger_set_mode(LOG_MODE_HUMAN);
+    logger_set_mode(LOG_MODE_CSV);
     timer_handler = xTimerCreate("timer", pdMS_TO_TICKS(1000), pdTRUE, NULL, timer_callbak);    
     if (timer_handler == NULL)
     {
@@ -314,6 +320,7 @@ static __NO_RETURN void main_task(void *pvParameters)
         CY_ASSERT(0);
     }
 
+#if 0   /* radar demo disabled -- IMU-only data collection pipeline for now */
     if (xTaskCreate(processing_task, PROCESSING_TASK_NAME, PROCESSING_TASK_STACK_SIZE, NULL, PROCESSING_TASK_PRIORITY, &processing_task_handler) != pdPASS)
     {
         CY_ASSERT(0);
@@ -328,13 +335,14 @@ static __NO_RETURN void main_task(void *pvParameters)
     {
         CY_ASSERT(0);
     }
+#endif
 
     /* ---- 9-DOF I2C sensor stack (DPS368 + BMI270 + BMM350) ---- */
     if (i2c_bus_init() == CY_RSLT_SUCCESS)
         {
             //barometer_task_init();
             vTaskDelay(pdMS_TO_TICKS(150));
-            //imu_task_init();
+            imu_task_init();
             vTaskDelay(pdMS_TO_TICKS(750));   // ← more time before mag; BMM350 init is slow
             //mag_task_init();
             vTaskDelay(pdMS_TO_TICKS(500));
@@ -347,7 +355,12 @@ static __NO_RETURN void main_task(void *pvParameters)
         }
         
     /* ----------------------------------------------------------- */
-    /* ---- QSPI flash bring-up: erase, write, read-back, verify ---- */
+    /* ---- QSPI flash bring-up: erase, write, read-back, verify ----
+     * Disabled while the IMU-only data pipeline is in serial-CSV mode.
+     * Kept in place (not deleted) in case on-board flash logging is
+     * wanted later -- see: real merit only if an on-board model needs
+     * to process data straight out of QSPI in real time. */
+#if 0
     if (qspi_flash_init() == CY_RSLT_SUCCESS)
     {
         printf("[qspi] flash up: %lu bytes, %lu-byte sectors\r\n",
@@ -371,9 +384,10 @@ static __NO_RETURN void main_task(void *pvParameters)
     {
         printf("[qspi] flash init FAILED\r\n");
     }
+#endif
     /* -------------------------------------------------------------- */
 
-
+#if 0   /* radar demo disabled -- IMU-only data collection pipeline for now */
     mgr.subscribe(main_task_handler);
 
     /* Initialize the initial state of ce_app_state */
@@ -427,6 +441,17 @@ static __NO_RETURN void main_task(void *pvParameters)
         xTaskNotifyGive(processing_task_handler);
 
     }
+#else
+    (void)sz;
+    (void)data_buff;
+    (void)result;
+    (void)last_timestamp;
+
+    for (;;)
+    {
+        vTaskDelay(pdMS_TO_TICKS(1000));
+    }
+#endif
 }
 
 /*******************************************************************************

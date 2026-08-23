@@ -1,5 +1,5 @@
 {
-    "modustoolbox.toolsPath": "C:/Users/adams/ModusToolbox/tools_3.7",
-    "cortex-debug.openocdPath": "C:/Infineon/Tools/ModusToolboxProgtools-1.8/openocd/bin/openocd.exe",
-    "cortex-debug.gccPath": "C:/Users/adams/Infineon/Tools/mtb-gcc-arm-eabi/14.2.1/gcc/bin"
+    "modustoolbox.toolsPath": "c:/Infineon/ModusToolbox/tools_3.8",
+    "cortex-debug.openocdPath": "c:/Infineon/modustoolboxprogtools/openocd/bin/openocd.exe",
+    "cortex-debug.gccPath": "c:/Infineon/mtbgccpackage/gcc/bin"
 }

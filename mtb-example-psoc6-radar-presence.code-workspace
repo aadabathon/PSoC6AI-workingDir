@@ -26,7 +26,7 @@
         "cortex-debug.JLinkGDBServerPath.linux": "JLinkGDBServerCLExe",
         "clangd.arguments": [
             "--background-index",
-            "--query-driver=C:/Users/adams/Infineon/Tools/mtb-gcc-arm-eabi/14.2.1/gcc/bin/arm-none-eabi-*"
+            "--query-driver=C:/Infineon/mtbgccpackage/gcc/bin/arm-none-eabi-*"
         ]
     },
     "extensions": {

@@ -13,6 +13,8 @@
 #include "imu_task.h"
 #include "bmi270.h"
 #include "i2c_bus.h"
+#include "logger.h"
+#include "log_sample.h"
 
 #include "FreeRTOS.h"
 #include "task.h"
@@ -20,7 +22,7 @@
 
 #include <stdio.h>
 
-#define SAMPLE_PERIOD_MS        (200U)
+#define SAMPLE_PERIOD_MS        (5U)
 #define PRINT_DECIMATION        (20U)       /* print every 20th sample = 10 Hz */
 #define QUEUE_LENGTH            (8U)        /* a few samples of headroom */
 #define TASK_STACK_WORDS        (1024U)
@@ -62,6 +64,17 @@ static void imu_task(void *arg)
             /* Drop-on-full -- freshest sample wins, consumers don't get
              * a stale backlog. Same semantics as the barometer queue. */
             (void)xQueueSend(s_reading_queue, &reading, 0);
+
+            log_sample_t s = {
+                .ts_ms = (uint32_t)(xTaskGetTickCount() * portTICK_PERIOD_MS),
+                .src   = SRC_IMU,
+                .d.imu = {
+                    .ax = reading.ax_mps2, .ay = reading.ay_mps2, .az = reading.az_mps2,
+                    .gx = reading.gx_dps,  .gy = reading.gy_dps,  .gz = reading.gz_dps,
+                    .temp_c = reading.temp_c
+                }
+            };
+            logger_post(&s);
 
             /* Decimated print so we don't drown the UART at 200 Hz. */
             if ((tick++ % PRINT_DECIMATION) == 0)
