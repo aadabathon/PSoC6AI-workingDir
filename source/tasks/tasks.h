@@ -13,8 +13,10 @@
  #define __TASKS_H__
 
 #include "barometer_task.h"
+#include "button_task.h"
 #include "imu_task.h"
 #include "mag_task.h"
 #include "mic_task.h"
+#include "wifi_task.h"
 
  #endif

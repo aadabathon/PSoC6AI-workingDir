@@ -18,6 +18,8 @@
 #include "dps368.h"
 #include "i2c_bus.h"
 #include "barometer_task.h"
+#include "logger.h"
+#include "log_sample.h"
 #include "FreeRTOS.h"
 #include "task.h"
 #include "queue.h"
@@ -30,7 +32,9 @@
  * caps you around 125ms. Asking for faster than that just gets you the
  * same sample twice.
  * ---------------------------------------------------------------------------- */
-#define SAMPLE_PERIOD_MS        (2000U)      /* 0.5 Hz -- good for slow weather changes */
+#define SAMPLE_PERIOD_MS        (500U)       /* 2 Hz -- fast enough to catch elevation
+                                              * change (stairs) in activity data, well
+                                              * under the chip's ~125ms cap */
 #define QUEUE_LENGTH            (4U)
 #define TASK_STACK_WORDS        (1024U)
 #define TASK_PRIORITY           (tskIDLE_PRIORITY + 2)
@@ -78,9 +82,14 @@ static void barometer_task(void *arg)
 
         if (rslt == CY_RSLT_SUCCESS)
         {
-            /* Print to debug terminal. \r\n because picocom/PuTTY want both. */
-            printf("[baro] P=%.2f Pa  T=%.2f C\r\n",
-                   reading.pressure_pa, reading.temperature_c);
+            /* Never printf readings directly -- the logger owns the UART.
+             * A stray printf here would tear CSV rows mid-line. */
+            log_sample_t s = {
+                .ts_ms  = (uint32_t)(xTaskGetTickCount() * portTICK_PERIOD_MS),
+                .src    = SRC_BARO,
+                .d.baro = { .pa = reading.pressure_pa, .temp_c = reading.temperature_c }
+            };
+            logger_post(&s);
 
             /* Push onto queue. If full, *overwrite* the oldest -- consumers
              * always want the freshest reading, not a stale backlog. We

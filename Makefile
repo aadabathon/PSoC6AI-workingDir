@@ -89,6 +89,12 @@ VERBOSE=
 #
 COMPONENTS=FREERTOS
 
+# Wi-Fi (wifi-core-freertos-lwip-mbedtls, see deps/) needs the lwIP network
+# stack, mbedTLS (linked in even though the TCP CSV stream itself is
+# plaintext -- secure-sockets is built on top of it), and secure-sockets as
+# the socket API surface.
+COMPONENTS+=LWIP MBEDTLS SECURE_SOCKETS
+
 # Like COMPONENTS, but disable optional code that was enabled by default.
 DISABLE_COMPONENTS=
 
@@ -109,6 +115,22 @@ DEFINES=CY_RETARGET_IO_CONVERT_LF_TO_CRLF CY_RTOS_AWARE \
         ARM_TABLE_TWIDDLECOEF_F32_64 ARM_TABLE_BITREVIDX_FLT_64 \
         ARM_TABLE_TWIDDLECOEF_RFFT_F32_128 ARM_ALL_FAST_TABLES \
 		ARM_MATH_LOOPUNROLL
+
+# Uncomment to re-enable the XENSIV radar presence demo path (radar frames,
+# presence library, stock radar CLI). Default build is the DeepCraft
+# data-collection rig: sensor stack -> logger -> CSV over UART.
+#DEFINES+=ENABLE_RADAR
+
+# Wi-Fi TCP CSV streaming (source/tasks/wifi_task.c). CYBSP_WIFI_CAPABLE
+# tells the BSP/HAL to bring up the CYW43439's SDIO bus. MBEDTLSFLAGS points
+# at the default mbedtls config header the wifi-core library ships on its
+# own include path (mirrors Infineon's own wifi-tcp-server example -- no
+# app-local mbedtls_user_config.h needed); built as its own variable first,
+# same as the reference example, since inlining the quoted string directly
+# into DEFINES+= is quoting-fragile across shells.
+MBEDTLSFLAGS=MBEDTLS_USER_CONFIG_FILE='"mbedtls_user_config.h"'
+DEFINES+=CYBSP_WIFI_CAPABLE
+DEFINES+=$(MBEDTLSFLAGS)
 
 # Select softfp or hardfp floating point. Default is softfp.
 VFP_SELECT=

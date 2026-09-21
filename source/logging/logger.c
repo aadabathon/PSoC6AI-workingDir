@@ -3,38 +3,77 @@
  * ============================================================================ */
 
 #include "logger.h"
+#include "logger_flash.h"
+#include "wifi_task.h"
 #include "FreeRTOS.h"
 #include "task.h"
 #include "queue.h"
 #include <stdio.h>
 #include <string.h>
 
-#define LOGGER_QUEUE_LEN     (32U)        /* headroom for bursty producers */
+#define LOGGER_QUEUE_LEN     (64U)        /* headroom for bursty producers (50 Hz IMU + rest) */
 #define LOGGER_STACK_WORDS   (2048U)      /* printf with floats is hungry */
 #define LOGGER_PRIORITY      (tskIDLE_PRIORITY + 1)  /* below sensors, above idle */
-#define CSV_ROW_PERIOD_MS    (50U)        /* 20 Hz merged rows */
+#define QUEUE_WAIT_MS        (100U)       /* poll granularity when idle */
 
 static QueueHandle_t s_queue = NULL;
 static TaskHandle_t  s_task  = NULL;
-static volatile log_mode_t s_mode = LOG_MODE_HUMAN;
+static volatile log_mode_t s_mode    = LOG_MODE_HUMAN;
+static volatile bool       s_enabled = false;   /* recording gate: off until start */
+static volatile uint8_t    s_sink    = LOGGER_SINK_UART;   /* default: UART only */
+
+static char s_label[LOGGER_LABEL_MAX] = "unlabeled";
 
 /* The logger holds the latest reading from each sensor. In CSV mode it emits
- * all of them together every CSV_ROW_PERIOD_MS -> aligned feature vectors. */
+ * all of them merged, one row per IMU sample -> aligned feature vectors at
+ * the IMU rate. */
 static log_sample_t s_latest[5];      /* indexed by sample_src_t */
 static bool         s_seen[5];        /* have we received this sensor yet? */
+static bool         s_header_needed = true;
 
 void logger_post(const log_sample_t *s)
 {
     if (s_queue == NULL) return;
-    /* Called from both tasks and ISRs (mic). Use the FromISR variant when
-     * in ISR context. Detecting context is awkward; simplest robust choice:
-     * the mic posts via a task, not its ISR. So plain send here. (If you ever
-     * post from a true ISR, switch to xQueueSendFromISR.) */
+    /* All producers post from task context (the mic computes its features in
+     * its ISR but hands them to its own task, which posts here). If you ever
+     * post from a true ISR, switch to xQueueSendFromISR. */
     (void)xQueueSend(s_queue, s, 0);   /* drop-on-full: freshest wins */
 }
 
-void  logger_set_mode(log_mode_t mode) { s_mode = mode; }
-log_mode_t logger_get_mode(void)       { return s_mode; }
+void logger_set_mode(log_mode_t mode)
+{
+    s_mode = mode;
+    s_header_needed = true;            /* header reprints when CSV resumes */
+}
+log_mode_t logger_get_mode(void) { return s_mode; }
+
+void logger_set_enabled(bool on)
+{
+    if (on && !s_enabled)
+    {
+        s_header_needed = true;   /* header per session */
+        if (s_sink & LOGGER_SINK_FLASH)
+        {
+            uint32_t ts = (uint32_t)(xTaskGetTickCount() * portTICK_PERIOD_MS);
+            logger_flash_enqueue_session_start(ts, s_label);
+        }
+    }
+    s_enabled = on;
+}
+bool logger_get_enabled(void) { return s_enabled; }
+
+void    logger_set_sink(uint8_t mask) { s_sink = mask; }
+uint8_t logger_get_sink(void)         { return s_sink; }
+
+void logger_set_label(const char *label)
+{
+    /* Critical section so the logger task never snapshots a half-written
+     * label mid-row. Copies are a few bytes -- negligible IRQ latency. */
+    taskENTER_CRITICAL();
+    strncpy(s_label, label, LOGGER_LABEL_MAX - 1);
+    s_label[LOGGER_LABEL_MAX - 1] = '\0';
+    taskEXIT_CRITICAL();
+}
 
 static void print_human(const log_sample_t *s)
 {
@@ -48,64 +87,129 @@ static void print_human(const log_sample_t *s)
     }
 }
 
-/* Emit the CSV header once, so Python knows the columns. */
-static void print_csv_header(void)
-{
-    printf("ts_ms,baro_pa,baro_t,ax,ay,az,gx,gy,gz,imu_t,"
-           "mx,my,mz,mag_t,radar_present,radar_bin,mic_rms,mic_peak\r\n");
-}
+/* Single source of truth for the header text, so UART and TCP send the
+ * exact same bytes -- one printf, one wifi_tcp_send, no risk of drift. */
+static const char CSV_HEADER[] =
+    "ts_ms,baro_pa,baro_t,ax,ay,az,gx,gy,gz,imu_t,"
+    "mx,my,mz,mag_t,radar_present,radar_bin,mic_rms,mic_peak,label\r\n";
 
-/* Emit one merged row from the latest-of-each cache. */
-static void print_csv_row(uint32_t ts)
-{
-    const log_sample_t *b = &s_latest[SRC_BARO];
-    const log_sample_t *i = &s_latest[SRC_IMU];
-    const log_sample_t *m = &s_latest[SRC_MAG];
-    const log_sample_t *r = &s_latest[SRC_RADAR];
-    const log_sample_t *c = &s_latest[SRC_MIC];
+/* Emit one merged row from the latest-of-each cache into `row` (NUL
+ * terminated, no trailing \r\n -- callers add that per sink). Sensors not
+ * yet seen emit empty fields -- pandas turns those into NaN instead of fake
+ * zeros. APPEND clamps n so even a pathological float (a glitched sensor
+ * value printed with %f can be 40+ chars) truncates the row instead of
+ * walking off the end of the buffer. */
+#define APPEND(...)                                                      \
+    do {                                                                 \
+        n += snprintf(row + n, row_size - (size_t)n, __VA_ARGS__);       \
+        if (n >= (int)row_size) n = (int)row_size - 1;                   \
+    } while (0)
 
-    printf("%lu,%.1f,%.1f,%.3f,%.3f,%.3f,%.2f,%.2f,%.2f,%.1f,"
-           "%.1f,%.1f,%.1f,%.1f,%ld,%ld,%.1f,%d\r\n",
-        (unsigned long)ts,
-        b->d.baro.pa, b->d.baro.temp_c,
-        i->d.imu.ax, i->d.imu.ay, i->d.imu.az, i->d.imu.gx, i->d.imu.gy, i->d.imu.gz, i->d.imu.temp_c,
-        m->d.mag.mx, m->d.mag.my, m->d.mag.mz, m->d.mag.temp_c,
-        (long)r->d.radar.presence, (long)r->d.radar.range_bin,
-        c->d.mic.rms, c->d.mic.peak);
+static void build_csv_row(char *row, size_t row_size, uint32_t ts)
+{
+    int n = 0;
+
+    APPEND("%lu,", (unsigned long)ts);
+
+    if (s_seen[SRC_BARO])
+        APPEND("%.1f,%.1f,",
+               s_latest[SRC_BARO].d.baro.pa, s_latest[SRC_BARO].d.baro.temp_c);
+    else
+        APPEND(",,");
+
+    if (s_seen[SRC_IMU])
+        APPEND("%.3f,%.3f,%.3f,%.2f,%.2f,%.2f,%.1f,",
+               s_latest[SRC_IMU].d.imu.ax, s_latest[SRC_IMU].d.imu.ay, s_latest[SRC_IMU].d.imu.az,
+               s_latest[SRC_IMU].d.imu.gx, s_latest[SRC_IMU].d.imu.gy, s_latest[SRC_IMU].d.imu.gz,
+               s_latest[SRC_IMU].d.imu.temp_c);
+    else
+        APPEND(",,,,,,,");
+
+    if (s_seen[SRC_MAG])
+        APPEND("%.1f,%.1f,%.1f,%.1f,",
+               s_latest[SRC_MAG].d.mag.mx, s_latest[SRC_MAG].d.mag.my,
+               s_latest[SRC_MAG].d.mag.mz, s_latest[SRC_MAG].d.mag.temp_c);
+    else
+        APPEND(",,,,");
+
+    if (s_seen[SRC_RADAR])
+        APPEND("%ld,%ld,",
+               (long)s_latest[SRC_RADAR].d.radar.presence,
+               (long)s_latest[SRC_RADAR].d.radar.range_bin);
+    else
+        APPEND(",,");
+
+    if (s_seen[SRC_MIC])
+        APPEND("%.1f,%d,", s_latest[SRC_MIC].d.mic.rms, s_latest[SRC_MIC].d.mic.peak);
+    else
+        APPEND(",,");
+
+    char label[LOGGER_LABEL_MAX];
+    taskENTER_CRITICAL();
+    memcpy(label, s_label, sizeof(label));
+    taskEXIT_CRITICAL();
+    APPEND("%s", label);
 }
+#undef APPEND
 
 static void logger_task(void *arg)
 {
     (void)arg;
-    TickType_t next_csv = xTaskGetTickCount();
-    bool header_printed = false;
 
     for (;;)
     {
         log_sample_t s;
-        /* Wait up to the CSV cadence for a new sample. */
-        if (xQueueReceive(s_queue, &s, pdMS_TO_TICKS(CSV_ROW_PERIOD_MS)) == pdTRUE)
+        if (xQueueReceive(s_queue, &s, pdMS_TO_TICKS(QUEUE_WAIT_MS)) != pdTRUE)
         {
-            s_latest[s.src] = s;       /* update cache */
-            s_seen[s.src]   = true;
-
-            if (s_mode == LOG_MODE_HUMAN)
-                print_human(&s);        /* human mode: print each as it arrives */
+            continue;                  /* idle -- nothing arrived */
         }
 
-        /* CSV mode: emit a merged row on a fixed cadence regardless of arrivals */
-        if (s_mode == LOG_MODE_CSV)
+        s_latest[s.src] = s;           /* update cache */
+        s_seen[s.src]   = true;
+
+        if (!s_enabled)
         {
-            if (!header_printed) { print_csv_header(); header_printed = true; }
-            if (xTaskGetTickCount() - next_csv >= pdMS_TO_TICKS(CSV_ROW_PERIOD_MS))
+            continue;                  /* recording stopped: swallow silently */
+        }
+
+        if (s_mode == LOG_MODE_HUMAN)
+        {
+            print_human(&s);           /* human mode: print each as it arrives */
+        }
+        else if (s.src == SRC_IMU)
+        {
+            /* CSV mode: the IMU is the cadence master. One row/record per
+             * IMU sample = one feature vector at exactly the IMU rate,
+             * fanned out to whichever sink(s) are active. UART and TCP
+             * share one built row (build_csv_row) so the two streams can
+             * never drift from each other. */
+            if (s_sink & (LOGGER_SINK_UART | LOGGER_SINK_TCP))
             {
-                print_csv_row(xTaskGetTickCount() * portTICK_PERIOD_MS);
-                next_csv = xTaskGetTickCount();
+                if (s_header_needed)
+                {
+                    if (s_sink & LOGGER_SINK_UART) printf("%s", CSV_HEADER);
+                    if (s_sink & LOGGER_SINK_TCP)   wifi_tcp_send(CSV_HEADER, sizeof(CSV_HEADER) - 1);
+                    s_header_needed = false;
+                }
+
+                char row[256];
+                build_csv_row(row, sizeof(row), s.ts_ms);
+
+                if (s_sink & LOGGER_SINK_UART)
+                {
+                    printf("%s\r\n", row);
+                }
+                if (s_sink & LOGGER_SINK_TCP)
+                {
+                    char line[sizeof(row) + 2];
+                    int m = snprintf(line, sizeof(line), "%s\r\n", row);
+                    if (m > 0) wifi_tcp_send(line, (size_t)m);
+                }
             }
-        }
-        else
-        {
-            header_printed = false;     /* reset so header reprints on next CSV switch */
+            if (s_sink & LOGGER_SINK_FLASH)
+            {
+                logger_flash_enqueue_sample(s_latest, s_seen, s.ts_ms, s_label);
+            }
         }
     }
 }

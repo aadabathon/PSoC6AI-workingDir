@@ -10,6 +10,8 @@
 
 #include "mic_task.h"
 #include "pdm_mic.h"
+#include "logger.h"
+#include "log_sample.h"
 
 #include "FreeRTOS.h"
 #include "task.h"
@@ -21,7 +23,6 @@
 #define QUEUE_LENGTH        (4U)
 #define TASK_STACK_WORDS    (1024U)
 #define TASK_PRIORITY       (tskIDLE_PRIORITY + 2)
-#define PRINT_DECIMATION    (8U)   /* ~16kHz/256 = 62.5 frames/s -> print ~8/s */
 
 static QueueHandle_t s_queue = NULL;
 static TaskHandle_t  s_task  = NULL;
@@ -68,15 +69,20 @@ static void mic_task(void *arg)
     }
     printf("[mic] IM72D128 streaming at 16 kHz\r\n");
 
-    uint32_t tick = 0;
     for (;;)
     {
         mic_reading_t r;
-        /* Block until the ISR posts a frame's features. */
+        /* Block until the ISR posts a frame's features. Posting to the
+         * logger happens HERE, in task context -- the logger's plain
+         * xQueueSend is not ISR-safe, so the ISR must never call it. */
         if (xQueueReceive(s_queue, &r, portMAX_DELAY) == pdTRUE)
         {
-            if ((tick++ % PRINT_DECIMATION) == 0)
-                printf("[mic] RMS=%7.1f  peak=%5d\r\n", r.rms, r.peak);
+            log_sample_t s = {
+                .ts_ms = (uint32_t)(xTaskGetTickCount() * portTICK_PERIOD_MS),
+                .src   = SRC_MIC,
+                .d.mic = { .rms = r.rms, .peak = r.peak }
+            };
+            logger_post(&s);
         }
     }
 }

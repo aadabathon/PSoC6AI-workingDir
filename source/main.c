@@ -69,6 +69,13 @@
 // The tasks. Each .c file has one task, and the main task is in main.c because it owns the main() function. The others are in their own .c files to keep things tidy.
 #include "drivers.h"
 #include "tasks.h"
+#include "logging/logger_cli.h"
+#include "logging/logger_flash.h"
+
+/* Build with `DEFINES+=ENABLE_RADAR` in the Makefile to bring back the
+ * XENSIV radar presence demo path (radar frames, presence lib, stock radar
+ * CLI). Without it, the app is the DeepCraft data-collection rig: sensor
+ * stack -> logger -> CSV over UART, driven by logger_cli + USER BTN1. */
 
 
 /*******************************************************************************
@@ -96,9 +103,10 @@
 * Function Prototypes
 ********************************************************************************/
 static void main_task(void *pvParameters);
-static void processing_task(void *pvParameters);
 static void timer_callbak(TimerHandle_t xTimer);
 
+#ifdef ENABLE_RADAR
+static void processing_task(void *pvParameters);
 static int32_t init_leds(void);
 static int32_t init_sensor(void);
 static void process_verbose_cmd(xensiv_radar_presence_handle_t handle, XENSIV_RADAR_PRESENCE_TIMESTAMP time_ms);
@@ -106,6 +114,7 @@ static void xensiv_bgt60trxx_interrupt_handler(void* args, cyhal_gpio_event_t ev
 void presence_detection_cb(xensiv_radar_presence_handle_t handle,
                            const xensiv_radar_presence_event_t* event,
                            void *data);
+#endif
 
 /*******************************************************************************
  * Local Declarations
@@ -121,13 +130,15 @@ typedef struct {
 /*******************************************************************************
 * Global Variables
 ********************************************************************************/
+#ifdef ENABLE_RADAR
 static cyhal_spi_t spi_obj;
 static xensiv_bgt60trxx_mtb_t bgt60_obj;
 static float32_t frame[NUM_SAMPLES_PER_FRAME * 2];
 static float32_t avg_chirp[NUM_SAMPLES_PER_CHIRP];
+static TaskHandle_t processing_task_handler;
+#endif
 
 static TaskHandle_t main_task_handler;
-static TaskHandle_t processing_task_handler;
 static TimerHandle_t timer_handler;
 radar_data_manager_s mgr;
 
@@ -135,6 +146,7 @@ ce_state_s ce_app_state;
 
 volatile bool print_job_locked;
 
+#ifdef ENABLE_RADAR
 /*******************************************************************************
 * Function Name: read_radar_data
 ********************************************************************************
@@ -208,6 +220,7 @@ void reconf_radar(optimization_type_e requested)
         CY_ASSERT(0);
     }
 }
+#endif /* ENABLE_RADAR */
 
 
 /*******************************************************************************
@@ -248,7 +261,7 @@ int main(void)
 
 #endif
 
-#if 0   /* radar demo disabled -- IMU-only data collection pipeline for now */
+#ifdef ENABLE_RADAR
     mgr.in_read_radar_data = read_radar_data;
     radar_data_manager_init(&mgr, NUM_SAMPLES_PER_FRAME *6, NUM_SAMPLES_PER_FRAME *2);
     radar_data_manager_set_malloc_free(pvPortMalloc,
@@ -264,8 +277,8 @@ int main(void)
     printf("Press ENTER to enter setup mode, press ESC to quit setup mode \r\n");
 #else
     printf("\x1b[2J\x1b[;H");
-    printf("****************** IMU data logger ****************** \r\n\n"
-           "BMI270 IMU -> CSV over serial for DeepCraft\r\n");
+    printf("****************** DeepCraft data logger ****************** \r\n\n"
+           "IMU + baro + mag + mic -> merged CSV over serial\r\n");
 #endif
 
     /* Create the RTOS task */
@@ -308,7 +321,15 @@ static __NO_RETURN void main_task(void *pvParameters)
     XENSIV_RADAR_PRESENCE_TIMESTAMP last_timestamp = 0;
 
     logger_init();
+#ifdef ENABLE_RADAR
+    /* Radar demo has no logger CLI/button (the stock radar console owns
+     * stdin), so presence events print immediately, human-readable. */
+    logger_set_mode(LOG_MODE_HUMAN);
+    logger_set_enabled(true);
+#else
+    /* Data-collection rig: CSV mode, gated off until `start` or BTN1. */
     logger_set_mode(LOG_MODE_CSV);
+#endif
     timer_handler = xTimerCreate("timer", pdMS_TO_TICKS(1000), pdTRUE, NULL, timer_callbak);    
     if (timer_handler == NULL)
     {
@@ -320,7 +341,7 @@ static __NO_RETURN void main_task(void *pvParameters)
         CY_ASSERT(0);
     }
 
-#if 0   /* radar demo disabled -- IMU-only data collection pipeline for now */
+#ifdef ENABLE_RADAR
     if (xTaskCreate(processing_task, PROCESSING_TASK_NAME, PROCESSING_TASK_STACK_SIZE, NULL, PROCESSING_TASK_PRIORITY, &processing_task_handler) != pdPASS)
     {
         CY_ASSERT(0);
@@ -337,57 +358,54 @@ static __NO_RETURN void main_task(void *pvParameters)
     }
 #endif
 
-    /* ---- 9-DOF I2C sensor stack (DPS368 + BMI270 + BMM350) ---- */
+    /* ---- 9-DOF I2C sensor stack (DPS368 + BMI270 + BMM350) + mic ---- */
     if (i2c_bus_init() == CY_RSLT_SUCCESS)
         {
-            //barometer_task_init();
+            barometer_task_init();
             vTaskDelay(pdMS_TO_TICKS(150));
             imu_task_init();
             vTaskDelay(pdMS_TO_TICKS(750));   // ← more time before mag; BMM350 init is slow
-            //mag_task_init();
+            mag_task_init();
             vTaskDelay(pdMS_TO_TICKS(500));
-            //mic_task_init();
-            printf("[sensors] 9-DOF I2C stack online\r\n");
+            mic_task_init();
+            printf("[sensors] sensor stack online\r\n");
         }
     else
         {
             printf("[sensors] i2c_bus_init FAILED\r\n");
         }
-        
-    /* ----------------------------------------------------------- */
-    /* ---- QSPI flash bring-up: erase, write, read-back, verify ----
-     * Disabled while the IMU-only data pipeline is in serial-CSV mode.
-     * Kept in place (not deleted) in case on-board flash logging is
-     * wanted later -- see: real merit only if an on-board model needs
-     * to process data straight out of QSPI in real time. */
-#if 0
-    if (qspi_flash_init() == CY_RSLT_SUCCESS)
+
+#ifndef ENABLE_RADAR
+    /* Recording controls: USER BTN1 toggles capture (LED1 mirrors it) and
+     * the logger CLI owns stdin. In the radar build the stock radar console
+     * owns stdin and the LEDs instead, so neither is started there. */
+    if (button_task_init() != CY_RSLT_SUCCESS)
     {
-        printf("[qspi] flash up: %lu bytes, %lu-byte sectors\r\n",
-               (unsigned long)qspi_flash_total_size(),
-               (unsigned long)qspi_flash_sector_size());
-
-        const uint32_t test_addr = 0x0;
-        uint8_t  wbuf[16] = {0xDE,0xAD,0xBE,0xEF,0x01,0x02,0x03,0x04,
-                             0x05,0x06,0x07,0x08,0xCA,0xFE,0xBA,0xBE};
-        uint8_t  rbuf[16] = {0};
-
-        qspi_flash_erase(test_addr, qspi_flash_sector_size());  /* erase before write */
-        qspi_flash_write(test_addr, wbuf, sizeof(wbuf));
-        qspi_flash_read (test_addr, rbuf, sizeof(rbuf));
-
-        bool ok = (memcmp(wbuf, rbuf, sizeof(wbuf)) == 0);
-        printf("[qspi] round-trip %s (read back %02X %02X %02X %02X ...)\r\n",
-               ok ? "PASS" : "FAIL", rbuf[0], rbuf[1], rbuf[2], rbuf[3]);
+        printf("[button] init FAILED\r\n");
     }
-    else
+    if (logger_cli_init() != CY_RSLT_SUCCESS)
     {
-        printf("[qspi] flash init FAILED\r\n");
+        printf("[cli] init FAILED\r\n");
+    }
+
+    /* Wi-Fi TCP CSV sink (source/tasks/wifi_task.c). Joining is skipped
+     * (not a boot-time failure) if source/tasks/wifi_config.h still has
+     * the placeholder SSID -- see wifi_task.c for that check. */
+    if (wifi_task_init() != CY_RSLT_SUCCESS)
+    {
+        printf("[wifi] init FAILED\r\n");
     }
 #endif
+
+    /* ---- QSPI flash: ring-buffer logging sink (opt-in via CLI `sink
+     * flash`/`sink both`). See logger_flash.h for the on-flash layout. ---- */
+    if (logger_flash_init() != CY_RSLT_SUCCESS)
+    {
+        printf("[flash] init FAILED\r\n");
+    }
     /* -------------------------------------------------------------- */
 
-#if 0   /* radar demo disabled -- IMU-only data collection pipeline for now */
+#ifdef ENABLE_RADAR
     mgr.subscribe(main_task_handler);
 
     /* Initialize the initial state of ce_app_state */
@@ -454,6 +472,7 @@ static __NO_RETURN void main_task(void *pvParameters)
 #endif
 }
 
+#ifdef ENABLE_RADAR
 /*******************************************************************************
 * Function Name: processing_task
 ********************************************************************************
@@ -544,23 +563,12 @@ void presence_detection_cb(xensiv_radar_presence_handle_t handle,
         switch (event->state)
         {
             case XENSIV_RADAR_PRESENCE_STATE_MACRO_PRESENCE:
-                cyhal_gpio_write(USER_LED1, true);
-                cyhal_gpio_write(USER_LED2, false);
-                printf("[INFO] macro presence %" PRIi32 " %" PRIi32 "\n",
-                        event->range_bin,
-                        event->timestamp);
-                break;
-
             case XENSIV_RADAR_PRESENCE_STATE_MICRO_PRESENCE:
                 cyhal_gpio_write(USER_LED1, true);
                 cyhal_gpio_write(USER_LED2, false);
-                printf("[INFO] micro presence %" PRIi32 " %" PRIi32 "\n",
-                        event->range_bin,
-                        event->timestamp);
                 break;
 
             case XENSIV_RADAR_PRESENCE_STATE_ABSENCE:
-                printf("[INFO] absence %" PRIu32 "\n", event->timestamp);
                 cyhal_gpio_write(USER_LED1, false);
                 cyhal_gpio_write(USER_LED2, true);
                 break;
@@ -569,8 +577,18 @@ void presence_detection_cb(xensiv_radar_presence_handle_t handle,
                 printf("[MSG] ERROR: Unknown reported state in event handling\n");
                 break;
         }
-
     }
+
+    /* Radar is a logger producer like everything else -- no direct printf,
+     * so presence events land in the merged CSV rows (radar_present column:
+     * 0 macro, 1 micro, 2 absence) and in human mode as [radar] lines. */
+    log_sample_t s = {
+        .ts_ms   = event->timestamp,
+        .src     = SRC_RADAR,
+        .d.radar = { .presence  = (int32_t)event->state,
+                     .range_bin = (int32_t)event->range_bin }
+    };
+    logger_post(&s);
 
     /* save the last reported event state */
     ce_app_state.last_reported_event = *event;
@@ -798,6 +816,7 @@ void process_verbose_cmd(xensiv_radar_presence_handle_t handle,
         print_job_locked = false;
     }
 }
+#endif /* ENABLE_RADAR */
 
 
 /*******************************************************************************

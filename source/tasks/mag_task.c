@@ -16,14 +16,15 @@
 #include "bmm350.h"
 #include "bmm350_defs.h"
 #include "bmm350_glue.h"
+#include "logger.h"
+#include "log_sample.h"
 
 #include "FreeRTOS.h"
 #include "task.h"
 #include "queue.h"
 #include <stdio.h>
 
-#define SAMPLE_PERIOD_MS        (200U)       
-#define PRINT_DECIMATION        (5U)        /* print every 5th = 4 Hz */
+#define SAMPLE_PERIOD_MS        (100U)      /* 10 Hz poll of the 25 Hz ODR */
 #define QUEUE_LENGTH            (4U)
 #define TASK_STACK_WORDS        (2048U)     /* Bosch lib + printf floats = hungry */
 #define TASK_PRIORITY           (tskIDLE_PRIORITY + 2)
@@ -86,7 +87,6 @@ static void mag_task(void *arg)
 
     TickType_t       next_wake = xTaskGetTickCount();
     const TickType_t period    = pdMS_TO_TICKS(SAMPLE_PERIOD_MS);
-    uint32_t         tick      = 0;
 
     for (;;)
     {
@@ -103,18 +103,15 @@ static void mag_task(void *arg)
             };
             (void)xQueueSend(s_queue, &r, 0);
 
-            if ((tick++ % PRINT_DECIMATION) == 0)
-            {
-                /* |B| -- field magnitude. Should hold roughly steady at
-                 * ~50 uT (give or take a lot, depending on indoor metal)
-                 * as you rotate the board. If it swings wildly, the
-                 * compensation isn't doing its job. */
-                float mag = sqrtf(r.mx_uT * r.mx_uT
-                                + r.my_uT * r.my_uT
-                                + r.mz_uT * r.mz_uT);
-                printf("[mag] B=(%+7.1f %+7.1f %+7.1f) uT  |B|=%6.1f uT  T=%.1f C\r\n",
-                       r.mx_uT, r.my_uT, r.mz_uT, mag, r.temp_c);
-            }
+            /* No direct printf -- the logger owns the UART. Human-mode
+             * output comes from the logger's [mag] formatter. */
+            log_sample_t s = {
+                .ts_ms = (uint32_t)(xTaskGetTickCount() * portTICK_PERIOD_MS),
+                .src   = SRC_MAG,
+                .d.mag = { .mx = r.mx_uT, .my = r.my_uT, .mz = r.mz_uT,
+                           .temp_c = r.temp_c }
+            };
+            logger_post(&s);
         }
         else
         {

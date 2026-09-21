@@ -5,9 +5,11 @@
  * the chip. The I2C bus itself is shared with the DPS368 and arbitrated by
  * the mutex inside i2c_bus.c -- this task doesn't have to know or care.
  *
- * Sample rate: 200 Hz (5 ms period). The chip's ODR is also 200 Hz, so we
- * grab a fresh sample every poll. UART printing happens at 10 Hz only --
- * 200 Hz of printf would saturate the link and likely starve the task.
+ * Sample rate: 50 Hz (20 ms period). The chip's ODR is 200 Hz so we take
+ * every 4th sample. 50 Hz is the DeepCraft sweet spot for activity
+ * classification, and -- critically -- a full merged CSV row per sample
+ * fits comfortably in 115200 baud, which 200 Hz would not.
+ * All output goes through the logger (single owner of the UART).
  * ============================================================================ */
 
 #include "imu_task.h"
@@ -22,8 +24,7 @@
 
 #include <stdio.h>
 
-#define SAMPLE_PERIOD_MS        (5U)
-#define PRINT_DECIMATION        (20U)       /* print every 20th sample = 10 Hz */
+#define SAMPLE_PERIOD_MS        (20U)       /* 50 Hz -- the CSV cadence master */
 #define QUEUE_LENGTH            (8U)        /* a few samples of headroom */
 #define TASK_STACK_WORDS        (1024U)
 #define TASK_PRIORITY           (tskIDLE_PRIORITY + 2)
@@ -52,8 +53,7 @@ static void imu_task(void *arg)
 
     TickType_t       next_wake = xTaskGetTickCount();
     const TickType_t period    = pdMS_TO_TICKS(SAMPLE_PERIOD_MS);
-    uint32_t         tick      = 0;
-    
+
     for (;;)
     {
         bmi270_reading_t reading;
@@ -75,16 +75,6 @@ static void imu_task(void *arg)
                 }
             };
             logger_post(&s);
-
-            /* Decimated print so we don't drown the UART at 200 Hz. */
-            if ((tick++ % PRINT_DECIMATION) == 0)
-            {
-                printf("[imu] a=(%+6.2f %+6.2f %+6.2f) m/s2  "
-                       "g=(%+7.1f %+7.1f %+7.1f) dps  T=%.1f C\r\n",
-                       reading.ax_mps2, reading.ay_mps2, reading.az_mps2,
-                       reading.gx_dps,  reading.gy_dps,  reading.gz_dps,
-                       reading.temp_c);
-            }
         }
         else
         {
