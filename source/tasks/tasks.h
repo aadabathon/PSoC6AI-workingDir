@@ -17,6 +17,7 @@
 #include "imu_task.h"
 #include "mag_task.h"
 #include "mic_task.h"
+#include "ml_task.h"
 #include "wifi_task.h"
 
  #endif

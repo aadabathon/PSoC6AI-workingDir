@@ -175,12 +175,14 @@ SOURCES+=$(wildcard source/drivers/*.c)
 SOURCES+=$(wildcard source/tasks/*.c)
 SOURCES+=$(wildcard source/vendor/bmm350_lib/*.c)
 SOURCES+=$(wildcard source/radar/*.c)
+SOURCES+=$(wildcard source/ml/*.c)
 
 INCLUDES+=source
 INCLUDES+=source/drivers
 INCLUDES+=source/tasks
 INCLUDES+=source/vendor/bmm350_lib
 INCLUDES+=source/radar
+INCLUDES+=source/ml
 # Relative path to the project directory (default is the Makefile's directory).
 #
 # This controls where automatic source code discovery looks for code.

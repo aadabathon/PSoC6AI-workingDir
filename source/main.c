@@ -364,6 +364,10 @@ static __NO_RETURN void main_task(void *pvParameters)
             barometer_task_init();
             vTaskDelay(pdMS_TO_TICKS(150));
             imu_task_init();
+            if (ml_task_init() != CY_RSLT_SUCCESS)
+            {
+                printf("[ml] init FAILED\r\n");
+            }
             vTaskDelay(pdMS_TO_TICKS(750));   // ← more time before mag; BMM350 init is slow
             mag_task_init();
             vTaskDelay(pdMS_TO_TICKS(500));

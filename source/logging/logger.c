@@ -27,9 +27,14 @@ static char s_label[LOGGER_LABEL_MAX] = "unlabeled";
 /* The logger holds the latest reading from each sensor. In CSV mode it emits
  * all of them merged, one row per IMU sample -> aligned feature vectors at
  * the IMU rate. */
-static log_sample_t s_latest[5];      /* indexed by sample_src_t */
-static bool         s_seen[5];        /* have we received this sensor yet? */
+static log_sample_t s_latest[6];      /* indexed by sample_src_t */
+static bool         s_seen[6];        /* have we received this sensor yet? */
 static bool         s_header_needed = true;
+
+/* DEEPCRAFT Human Activity project classes, in the model's class_id order.
+ * Update this if the exported model's label order differs. */
+static const char *ML_CLASS_NAMES[] = { "running", "standing", "walking", "sitting", "jumping" };
+#define ML_CLASS_COUNT (sizeof(ML_CLASS_NAMES) / sizeof(ML_CLASS_NAMES[0]))
 
 void logger_post(const log_sample_t *s)
 {
@@ -84,6 +89,12 @@ static void print_human(const log_sample_t *s)
         case SRC_MAG:   printf("[mag] B=(%.1f %.1f %.1f) uT\r\n", s->d.mag.mx,s->d.mag.my,s->d.mag.mz); break;
         case SRC_RADAR: printf("[radar] present=%ld bin=%ld\r\n", (long)s->d.radar.presence,(long)s->d.radar.range_bin); break;
         case SRC_MIC:   printf("[mic] rms=%.1f peak=%d\r\n", s->d.mic.rms, s->d.mic.peak); break;
+        case SRC_ML: {
+            const char *name = (s->d.ml.class_id < ML_CLASS_COUNT) ?
+                                ML_CLASS_NAMES[s->d.ml.class_id] : "unknown";
+            printf("[ml] %s (%.0f%%)\r\n", name, (double)(s->d.ml.confidence * 100.0f));
+            break;
+        }
     }
 }
 
@@ -91,7 +102,7 @@ static void print_human(const log_sample_t *s)
  * exact same bytes -- one printf, one wifi_tcp_send, no risk of drift. */
 static const char CSV_HEADER[] =
     "ts_ms,baro_pa,baro_t,ax,ay,az,gx,gy,gz,imu_t,"
-    "mx,my,mz,mag_t,radar_present,radar_bin,mic_rms,mic_peak,label\r\n";
+    "mx,my,mz,mag_t,radar_present,radar_bin,mic_rms,mic_peak,ml_class,ml_conf,label\r\n";
 
 /* Emit one merged row from the latest-of-each cache into `row` (NUL
  * terminated, no trailing \r\n -- callers add that per sink). Sensors not
@@ -141,6 +152,15 @@ static void build_csv_row(char *row, size_t row_size, uint32_t ts)
 
     if (s_seen[SRC_MIC])
         APPEND("%.1f,%d,", s_latest[SRC_MIC].d.mic.rms, s_latest[SRC_MIC].d.mic.peak);
+    else
+        APPEND(",,");
+
+    if (s_seen[SRC_ML])
+    {
+        const char *name = (s_latest[SRC_ML].d.ml.class_id < ML_CLASS_COUNT) ?
+                            ML_CLASS_NAMES[s_latest[SRC_ML].d.ml.class_id] : "unknown";
+        APPEND("%s,%.3f,", name, s_latest[SRC_ML].d.ml.confidence);
+    }
     else
         APPEND(",,");
 

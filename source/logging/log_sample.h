@@ -19,6 +19,7 @@ typedef enum {
     SRC_MAG   = 2,
     SRC_RADAR = 3,
     SRC_MIC   = 4,
+    SRC_ML    = 5,
 } sample_src_t;
 
 typedef struct {
@@ -30,6 +31,7 @@ typedef struct {
         struct { float mx, my, mz, temp_c; }                      mag;
         struct { int32_t presence, range_bin; }                   radar;
         struct { float rms; int16_t peak; }                       mic;
+        struct { uint8_t class_id; float confidence; }            ml;
     } d;
 } log_sample_t;
 
