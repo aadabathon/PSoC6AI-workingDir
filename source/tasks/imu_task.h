@@ -12,6 +12,12 @@
 #include "cy_result.h"
 #include "FreeRTOS.h"
 #include "queue.h"
+#include "bmi270.h"
+
+typedef struct {
+    uint32_t ts_ms;
+    bmi270_reading_t reading;
+} imu_sample_t;
 
 cy_rslt_t       imu_task_init(void);
 QueueHandle_t   imu_task_get_queue(void);

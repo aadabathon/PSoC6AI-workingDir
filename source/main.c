@@ -71,6 +71,7 @@
 #include "tasks.h"
 #include "logging/logger_cli.h"
 #include "logging/logger_flash.h"
+#include "fall_alert_task.h"
 
 /* Build with `DEFINES+=ENABLE_RADAR` in the Makefile to bring back the
  * XENSIV radar presence demo path (radar frames, presence lib, stock radar
@@ -312,6 +313,8 @@ int main(void)
 *  none
 *
 *******************************************************************************/
+#include "wearable_config.h"
+
 static __NO_RETURN void main_task(void *pvParameters)
 {
     (void)pvParameters;
@@ -321,6 +324,10 @@ static __NO_RETURN void main_task(void *pvParameters)
     XENSIV_RADAR_PRESENCE_TIMESTAMP last_timestamp = 0;
 
     logger_init();
+#ifndef ENABLE_RADAR
+    if (fall_alert_task_init() != CY_RSLT_SUCCESS)
+        printf("[fall] local indicator init FAILED\r\n");
+#endif
 #ifdef ENABLE_RADAR
     /* Radar demo has no logger CLI/button (the stock radar console owns
      * stdin), so presence events print immediately, human-readable. */
@@ -361,17 +368,21 @@ static __NO_RETURN void main_task(void *pvParameters)
     /* ---- 9-DOF I2C sensor stack (DPS368 + BMI270 + BMM350) + mic ---- */
     if (i2c_bus_init() == CY_RSLT_SUCCESS)
         {
+#if WEARABLE_AUX_SENSORS
             barometer_task_init();
             vTaskDelay(pdMS_TO_TICKS(150));
+#endif
             imu_task_init();
             if (ml_task_init() != CY_RSLT_SUCCESS)
             {
                 printf("[ml] init FAILED\r\n");
             }
+#if WEARABLE_AUX_SENSORS
             vTaskDelay(pdMS_TO_TICKS(750));   // ← more time before mag; BMM350 init is slow
             mag_task_init();
             vTaskDelay(pdMS_TO_TICKS(500));
             mic_task_init();
+#endif
             printf("[sensors] sensor stack online\r\n");
         }
     else
@@ -395,10 +406,12 @@ static __NO_RETURN void main_task(void *pvParameters)
     /* Wi-Fi TCP CSV sink (source/tasks/wifi_task.c). Joining is skipped
      * (not a boot-time failure) if source/tasks/wifi_config.h still has
      * the placeholder SSID -- see wifi_task.c for that check. */
+#if WEARABLE_WIFI
     if (wifi_task_init() != CY_RSLT_SUCCESS)
     {
         printf("[wifi] init FAILED\r\n");
     }
+#endif
 #endif
 
     /* ---- QSPI flash: ring-buffer logging sink (opt-in via CLI `sink

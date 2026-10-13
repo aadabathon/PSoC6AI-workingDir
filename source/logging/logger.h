@@ -48,7 +48,7 @@ log_mode_t logger_get_mode(void);
 void    logger_set_sink(uint8_t mask);       /* bitmask of logger_sink_t */
 uint8_t logger_get_sink(void);
 
-/* Recording gate. ISR-safe (plain flag writes). */
+/* Recording gate. Task context only: starting may enqueue a flash boundary. */
 void logger_set_enabled(bool on);
 bool logger_get_enabled(void);
 

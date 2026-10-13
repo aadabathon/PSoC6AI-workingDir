@@ -1,3 +1,13 @@
+# PSoC 6 wearable movement platform
+
+The active application now includes IMU acquisition and a DEEPCRAFT CNN adapter.
+Start with the [wearable workflow](documentation/wearable.md) for firmware profiles,
+model deployment, offline data collection, enclosure requirements and known limits.
+The companion Python tools live in the separate `../analysis/` repository.
+
+The original radar example documentation follows for reference; radar is disabled
+in the default collection firmware.
+
 # PSoC&trade; 6 MCU: Human Presence Detection with XENSIV™ 60-GHz Radar
 
 This code example demonstrates Infineon's radar presence solution to detect human presence within a configurable distance. Powered by the [XENSIV™ 60-GHz radar](https://www.infineon.com/cms/en/product/sensor/radar-sensors/radar-sensors-for-iot/60ghz-radar/bgt60tr13c/), this solution provides extremely high accuracy in detecting both micro and macro motions that enable efficient user interaction with devices.

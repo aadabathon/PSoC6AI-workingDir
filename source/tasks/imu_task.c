@@ -61,12 +61,14 @@ static void imu_task(void *arg)
 
         if (rslt == CY_RSLT_SUCCESS)
         {
-            /* Drop-on-full -- freshest sample wins, consumers don't get
-             * a stale backlog. Same semantics as the barometer queue. */
-            (void)xQueueSend(s_reading_queue, &reading, 0);
+            uint32_t ts_ms = (uint32_t)(xTaskGetTickCount() * portTICK_PERIOD_MS);
+            imu_sample_t sample = { .ts_ms = ts_ms, .reading = reading };
+            /* A full queue drops the NEW sample. The consumer detects the
+             * timestamp gap and resets model context instead of joining gaps. */
+            (void)xQueueSend(s_reading_queue, &sample, 0);
 
             log_sample_t s = {
-                .ts_ms = (uint32_t)(xTaskGetTickCount() * portTICK_PERIOD_MS),
+                .ts_ms = ts_ms,
                 .src   = SRC_IMU,
                 .d.imu = {
                     .ax = reading.ax_mps2, .ay = reading.ay_mps2, .az = reading.az_mps2,
@@ -89,7 +91,7 @@ cy_rslt_t imu_task_init(void)
 {
     if (i2c_bus_handle() == NULL) return CY_RSLT_TYPE_ERROR;
 
-    s_reading_queue = xQueueCreate(QUEUE_LENGTH, sizeof(bmi270_reading_t));
+    s_reading_queue = xQueueCreate(QUEUE_LENGTH, sizeof(imu_sample_t));
     if (s_reading_queue == NULL) return CY_RSLT_TYPE_ERROR;
 
     BaseType_t ok = xTaskCreate(imu_task, "imu",

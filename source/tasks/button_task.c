@@ -1,13 +1,15 @@
 /* ============================================================================
  * button_task.c -- USER BTN1 toggles recording, USER LED1 mirrors it.
  *
- * The button ISR only flips the logger's enable flag (plain bool writes,
- * ISR-safe) with a tick-based debounce. A small task polls the flag and
+ * The button ISR notifies a task, which changes the recording state.
+ * Starting flash logging uses RTOS queues and must run in task context.
+ * A small task polls the flag and
  * drives the LED, so the LED also tracks state changes made from the CLI.
  * ============================================================================ */
 
 #include "button_task.h"
 #include "logger.h"
+#include "fall_alert_task.h"
 #include "resource_map.h"
 
 #include "cyhal.h"
@@ -38,7 +40,9 @@ static void button_isr(void *arg, cyhal_gpio_event_t event)
     if ((now - s_last_press_tick) < pdMS_TO_TICKS(DEBOUNCE_MS)) return;
     s_last_press_tick = now;
 
-    logger_set_enabled(!logger_get_enabled());
+    BaseType_t wake = pdFALSE;
+    if (s_task != NULL) vTaskNotifyGiveFromISR(s_task, &wake);
+    portYIELD_FROM_ISR(wake);
 }
 
 static void led_task(void *arg)
@@ -49,13 +53,19 @@ static void led_task(void *arg)
 
     for (;;)
     {
+        uint32_t presses = ulTaskNotifyTake(pdTRUE, pdMS_TO_TICKS(LED_POLL_MS));
+        if (presses > 0U)
+        {
+            /* Cancel wins over recording control for this entire batch. */
+            if (!fall_alert_cancel() && (presses & 1U))
+                logger_set_enabled(!logger_get_enabled());
+        }
         bool now = logger_get_enabled();
         if (now != last)
         {
             cyhal_gpio_write(USER_LED1, now);
             last = now;
         }
-        vTaskDelay(pdMS_TO_TICKS(LED_POLL_MS));
     }
 }
 

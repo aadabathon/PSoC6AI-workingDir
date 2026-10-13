@@ -305,8 +305,12 @@ void logger_flash_dump_as_csv(void)
         {
             print_data_row(&rec);
         }
-        /* session-start records carry no CSV row of their own -- each data
-         * record already embeds its own label, so boundaries are implicit. */
+        if (rec.magic == REC_MAGIC_SESSION)
+        {
+            /* Preserve explicit boundaries even for consecutive captures with
+             * the same label; the host importer starts a new segment here. */
+            printf("[flash] session ts_ms=%lu\r\n", (unsigned long)rec.ts_ms);
+        }
     }
     printf("[flash] dump complete\r\n");
 }

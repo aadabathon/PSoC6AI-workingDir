@@ -11,6 +11,7 @@
 #include "logger.h"
 #include "logger_flash.h"
 #include "wifi_task.h"
+#include "fall_alert_task.h"
 
 #include "FreeRTOS.h"
 #include "task.h"
@@ -41,6 +42,9 @@ static void print_help(void)
            "  erase confirm  wipe the flash ring buffer (irreversible)\r\n"
            "  wifi status    show Wi-Fi join / TCP client state\r\n"
            "  status         show current state\r\n"
+           "  alert test     test local fall LED (no model required)\r\n"
+           "  alert cancel   cancel local fall alert; keep recording state\r\n"
+           "  alert status   show local fall alert state\r\n"
            "  help           this list\r\n",
            (unsigned)(LOGGER_LABEL_MAX - 1));
 }
@@ -107,6 +111,18 @@ static void handle_line(char *line)
         wifi_task_get_ip_str(ip, sizeof(ip));
         printf("[cli] wifi joined=%d ip=%s client_connected=%d\r\n",
                (int)wifi_task_is_joined(), ip, (int)wifi_task_is_client_connected());
+    }
+    else if (strcmp(line, "alert test") == 0)
+    {
+        printf("[cli] alert test %s\r\n", fall_alert_test() ? "started" : "unavailable");
+    }
+    else if (strcmp(line, "alert cancel") == 0)
+    {
+        printf("[cli] alert %s\r\n", fall_alert_cancel() ? "cancelled" : "inactive");
+    }
+    else if (strcmp(line, "alert status") == 0)
+    {
+        printf("[cli] alert active=%d\r\n", (int)fall_alert_is_active());
     }
     else if (strcmp(line, "dump") == 0)
     {

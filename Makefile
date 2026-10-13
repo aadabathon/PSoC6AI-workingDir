@@ -97,6 +97,7 @@ COMPONENTS+=LWIP MBEDTLS SECURE_SOCKETS
 
 # Like COMPONENTS, but disable optional code that was enabled by default.
 DISABLE_COMPONENTS=
+CY_IGNORE+=tests
 
 # By default the build system automatically looks in the Makefile's directory
 # tree for source code and builds it. The SOURCES variable can be used to
@@ -120,6 +121,15 @@ DEFINES=CY_RETARGET_IO_CONVERT_LF_TO_CRLF CY_RTOS_AWARE \
 # presence library, stock radar CLI). Default build is the DeepCraft
 # data-collection rig: sensor stack -> logger -> CSV over UART.
 #DEFINES+=ENABLE_RADAR
+
+# The generated Studio preprocessor owns the 50-sample window / 30 stride.
+# Default remains collection-only until a verified C model export is supplied.
+ACTIVITY_MODEL_ENABLED ?= 0
+ACTIVITY_MODEL_CONTRACT_VERIFIED ?= 0
+WEARABLE_PROFILE ?= 0
+DEFINES+=WEARABLE_PROFILE=$(WEARABLE_PROFILE)
+DEFINES+=ACTIVITY_MODEL_ENABLED=$(ACTIVITY_MODEL_ENABLED)
+DEFINES+=ACTIVITY_MODEL_CONTRACT_VERIFIED=$(ACTIVITY_MODEL_CONTRACT_VERIFIED)
 
 # Wi-Fi TCP CSV streaming (source/tasks/wifi_task.c). CYBSP_WIFI_CAPABLE
 # tells the BSP/HAL to bring up the CYW43439's SDIO bus. MBEDTLSFLAGS points

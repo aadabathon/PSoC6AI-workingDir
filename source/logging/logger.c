@@ -5,6 +5,7 @@
 #include "logger.h"
 #include "logger_flash.h"
 #include "wifi_task.h"
+#include "activity_model.h"
 #include "FreeRTOS.h"
 #include "task.h"
 #include "queue.h"
@@ -33,8 +34,6 @@ static bool         s_header_needed = true;
 
 /* DEEPCRAFT Human Activity project classes, in the model's class_id order.
  * Update this if the exported model's label order differs. */
-static const char *ML_CLASS_NAMES[] = { "running", "standing", "walking", "sitting", "jumping" };
-#define ML_CLASS_COUNT (sizeof(ML_CLASS_NAMES) / sizeof(ML_CLASS_NAMES[0]))
 
 void logger_post(const log_sample_t *s)
 {
@@ -90,11 +89,11 @@ static void print_human(const log_sample_t *s)
         case SRC_RADAR: printf("[radar] present=%ld bin=%ld\r\n", (long)s->d.radar.presence,(long)s->d.radar.range_bin); break;
         case SRC_MIC:   printf("[mic] rms=%.1f peak=%d\r\n", s->d.mic.rms, s->d.mic.peak); break;
         case SRC_ML: {
-            const char *name = (s->d.ml.class_id < ML_CLASS_COUNT) ?
-                                ML_CLASS_NAMES[s->d.ml.class_id] : "unknown";
+            const char *name = activity_model_class_name(s->d.ml.class_id);
             printf("[ml] %s (%.0f%%)\r\n", name, (double)(s->d.ml.confidence * 100.0f));
             break;
         }
+        case SRC_FALL_ALERT: break; /* event path handled before sensor formatting */
     }
 }
 
@@ -155,10 +154,9 @@ static void build_csv_row(char *row, size_t row_size, uint32_t ts)
     else
         APPEND(",,");
 
-    if (s_seen[SRC_ML])
+    if (s_seen[SRC_ML] && (uint32_t)(ts - s_latest[SRC_ML].ts_ms) <= 1000U)
     {
-        const char *name = (s_latest[SRC_ML].d.ml.class_id < ML_CLASS_COUNT) ?
-                            ML_CLASS_NAMES[s_latest[SRC_ML].d.ml.class_id] : "unknown";
+        const char *name = activity_model_class_name(s_latest[SRC_ML].d.ml.class_id);
         APPEND("%s,%.3f,", name, s_latest[SRC_ML].d.ml.confidence);
     }
     else
@@ -182,6 +180,21 @@ static void logger_task(void *arg)
         if (xQueueReceive(s_queue, &s, pdMS_TO_TICKS(QUEUE_WAIT_MS)) != pdTRUE)
         {
             continue;                  /* idle -- nothing arrived */
+        }
+
+        /* Alert events are emitted even when sensor recording is stopped.
+         * They never enter the sensor cache or become ground-truth labels. */
+        if (s.src == SRC_FALL_ALERT)
+        {
+            char line[128];
+            const char *state = s.d.fall.action == 2U ? "TEST" : s.d.fall.action == 1U ? "ALERT" : "CANCEL";
+            int n = snprintf(line, sizeof(line), "[fall] state=%s ts_ms=%lu source_ts_ms=%lu confidence=%.3f\r\n",
+                             state, (unsigned long)s.ts_ms, (unsigned long)s.d.fall.source_ts_ms,
+                             s.d.fall.confidence);
+            printf("%s", line);
+            if ((s_sink & LOGGER_SINK_TCP) && n > 0 && n < (int)sizeof(line))
+                wifi_tcp_send(line, (size_t)n);
+            continue;
         }
 
         s_latest[s.src] = s;           /* update cache */
