@@ -5,6 +5,9 @@ Start with the [wearable workflow](documentation/wearable.md) for firmware profi
 model deployment, offline data collection, enclosure requirements and known limits.
 The companion Python tools live in the separate `../analysis/` repository.
 
+See the [current project state and roadmap](PROJECT_STATUS_AND_ROADMAP.md) for
+completed work, remaining blockers and the next hardware/data/model milestones.
+
 The original radar example documentation follows for reference; radar is disabled
 in the default collection firmware.
 
